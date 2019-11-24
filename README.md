@@ -55,6 +55,10 @@ The easiest way would be to fork this repository and start editing the files. If
 
 The folder `useful-scripts` contains a collection of Bash scripts which could be potentially useful to your needs. I have tried to make them as generic as possible but your requirements may require additional changes.
 
+### Configs
+
+The folder with the name `configs` contains various useful configs. Currently, it has only php.ini for both, development and production. To switch between them, modify `docker-compose.yml` file.
+
 ### File Manifest
 
 This section provides a quick glimpse of the folders/files and their purpose:
@@ -62,6 +66,7 @@ This section provides a quick glimpse of the folders/files and their purpose:
 | File/Folder | Purpose |
 | --- | --- |
 | .semaphore | SemaphoreCI config |
+| configs | folder with various config files |
 | docker-image-src | source code of Docker image |
 | docker-scripts | Bash scripts used inside containers(s) |
 | host-scripts | Bash scripts used inside host |

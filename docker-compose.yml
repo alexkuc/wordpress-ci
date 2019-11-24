@@ -1,44 +1,66 @@
 version: '3'
 services:
 
-    wordpress:
-        image: alexkuc/wordpress:mysql_pdo
-        container_name: wordpress
+  wordpress:
+    image: alexkuc/wordpress:mysql_pdo
+    container_name: wordpress
 
-        cap_add:
-            - SYS_ADMIN
-            - CHOWN
-            - SETGID
-            - SETUID
-        devices:
-            - /dev/fuse
-        security_opt:
-            - apparmor:unconfined
+    cap_add:
+      - SYS_ADMIN
+      - CHOWN
+      - SETGID
+      - SETUID
+    devices:
+      - /dev/fuse
+    security_opt:
+      - apparmor:unconfined
 
-        ports:
-            - 8080:80
-            - 443:443
+    ports:
+      - 8080:80
+      - 443:443
 
-        volumes:
-            - ./docker-scripts:/docker-entrypoint-initwp.d
-            - ./wp-browser:/wp-browser
-            - ./my-theme/:/my-theme
-            - ./my-plugin:/my-plugin
+    volumes:
+    # bash scripts for docker (automatically executed)
+    # see https://github.com/visiblevc/wordpress-starter/blob/0b45d216f8e3fd503c24c48ac476b7ee023aba74/run.sh#L120
+      - ./docker-scripts:/docker-entrypoint-initwp.d
+    # CI tests
+      - ./wp-browser:/wp-browser
+    # wordpress
+      - ./my-theme/:/my-theme
+      - ./my-plugin:/my-plugin
+    # apache
+      - ./configs/php.ini-development:/usr/local/etc/php/php.ini
 
-        environment:
-            DB_NAME: wordpress
-            DB_PASS: root
+    environment:
+    # for different multiline styles of YAML, see
+    # https://stackoverflow.com/questions/3790454/how-do-i-break-a-string-over-multiple-lines
+    #
+    # for a full list of supported environment variables, see
+    # https://github.com/visiblevc/wordpress-starter#service-environment-variables
+      DB_NAME: wordpress
+      DB_PASS: root
+      EXTRA_PHP:
+        define('WP_POST_REVISIONS', 0);
+      PLUGINS: >-
+        classic-editor
 
-    db:
-        image: mysql:5.7
-        container_name: db
-        ports:
-            - 3306:3306
-        environment:
-            MYSQL_ROOT_PASSWORD: root
+  db:
+    image: mysql:5.7
+    container_name: db
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    command:
+      [
+        '--character-set-server=utf8mb4',
+        '--collation-server=utf8mb4_unicode_ci'
+      ]
 
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        container_name: phpmyadmin
-        ports:
-            - 22222:80
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    volumes:
+      - ./configs/large-sql-import.ini:/usr/local/etc/php/conf.d/large-sql-import.ini
+    ports:
+      - 22222:80
