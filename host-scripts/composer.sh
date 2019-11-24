@@ -4,36 +4,43 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 
 IS_COMPOSER=$(command -v composer || true)
 
-DOCKER_COMPOSER_PATH="/wp-browser"
-LOCAL_COMPOSER_PATH="$PWD/$DOCKER_COMPOSER_PATH"
+# Acronym: DEPS = Depedencies
+DEPS_DOCKER_PATH="/wp-browser"
+DEPS_LOCAL_PATH="$PWD/$DEPS_DOCKER_PATH"
 
 # --ignore-platform-reqs because php is run on docker container
-FIX="composer global require hirak/prestissimo"
-CMD="composer install --ignore-platform-reqs"
+CMD_LOCAL="composer install --ignore-platform-reqs"
 
-if [ ! -d "$LOCAL_COMPOSER_PATH/vendor" ]; then
+# Downloads packages in parallel to speed up the installation process
+# https://github.com/hirak/prestissimo
+PARALLEL_DL="composer global require hirak/prestissimo"
+
+if [ ! -d "$DEPS_LOCAL_PATH/vendor" ]; then
     if [ -n "$IS_COMPOSER" ]; then
-        echo 'Installing (globally) hirak/prestissimo via local Composer...'
-        eval $FIX
+        if [ ! "$(composer global show | grep -c 'hirak/prestissimo')" ]; then
+            echo 'Installing (globally) hirak/prestissimo via local Composer...'
+            eval $PARALLEL_DL
+        else
+            echo 'hirak/prestissimo is already installed, skipping installation...'
+        fi
 
-        if [ ! -d "$LOCAL_COMPOSER_PATH/vendor" ]; then
+        if [ ! -d "$DEPS_LOCAL_PATH/vendor" ]; then
             echo 'Installing PHP depedencies via local Composer...'
-            eval $CMD -d $LOCAL_COMPOSER_PATH
+            eval $CMD_LOCAL -d $DEPS_LOCAL_PATH
         fi
     else
         echo 'Composer is not installed locally! Resorting to Docker...'
 
         echo 'Will (globally) install hirak/prestissimo inside Docker-based Composer container...'
-        CMD_DOCKER="$FIX"
+        CMD_DOCKER="$PARALLEL_DL"
 
-        if [ ! -d "$LOCAL_COMPOSER_PATH/vendor" ]; then
-            echo 'Will install PHP depedencies via Docker-based Composer container...'
-            CMD_DOCKER="${CMD_DOCKER} && $CMD -d $DOCKER_COMPOSER_PATH"
-        fi
+        echo 'Will install PHP depedencies via Docker-based Composer container...'
+        CMD_DOCKER="$CMD_DOCKER && $CMD_LOCAL"
 
         echo 'Running Composer commands via Docker-based Composer container...'
         docker run --rm \
-                    -v "$LOCAL_COMPOSER_PATH:$DOCKER_COMPOSER_PATH" \
+                    -v "$DEPS_LOCAL_PATH:$DEPS_DOCKER_PATH" \
+                    -w "$DEPS_DOCKER_PATH" \
                 composer bash -c "$CMD_DOCKER"
     fi
 else

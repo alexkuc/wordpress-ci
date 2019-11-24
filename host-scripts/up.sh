@@ -4,6 +4,8 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 
 COUNT=0
 
+./host-scripts/docker-machine-start.sh
+
 echo 'Pulling latest docker images...'
 docker-compose pull
 

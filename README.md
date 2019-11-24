@@ -16,7 +16,7 @@ This is **not** a tutorial or how-to guide but rather a scaffolding-like solutio
 - [docker](https://docs.docker.com/engine/reference/run/)
 - [docker-compose](https://docs.docker.com/compose/)
 - [wp-cli](https://wp-cli.org/)
-- shell scripts (Bash)
+- Bash scripts
 - [CodeCeption](https://codeception.com/)
 
 For each supported CI provider (a list of supported providers is available below), the following is implemented:
@@ -37,19 +37,23 @@ Please note that this is a very generic repository and for your specific needs y
 
 To use the vanilla setup for WordPress i.e. without specific CI configuration, follow these steps:
 
-1. Start `docker-machine`, e.g.: `docker-machine start default`
-2. Load docker environment variables, e.g. `eval "$(docker-machine env default)"`
-3. Start docker containers, e.g. `./host-scripts/up.sh`
-4. Install Composer dependencies, e.g. `./host-scripts/composer.sh`*
-5. Run CI tests, e.g. `./host-scripts/test.sh`
+1. Start docker containers, e.g. `./host-scripts/up.sh`
+2. Install Composer dependencies, e.g. `./host-scripts/composer.sh`\*
+3. Run CI tests, e.g. `./host-scripts/test.sh`\*\*
 
->\* Special note: this script uses dual configuration, where initially it tries to install dependencies using a locally installed Docker and if none is found, it defaults to [dockerized composer](https://hub.docker.com/_/composer)
+>\* This script uses dual configuration, where initially it tries to install dependencies using a locally installed Docker and if none is found, it defaults to [dockerized composer](https://hub.docker.com/_/composer)
+
+>\*\* The script `test.sh` supports position arguments `$1` and `$2` so you can execute a specific instead of running the entire suite, e.g. `./host-scripts/test.sh acceptance PluginCest:activatePlugin`
 
 >Scripts inside the folder `docker-scripts` are automatically executed by Docker container, see [L120 of `run.sh`](https://github.com/visiblevc/wordpress-starter/blob/0b45d216f8e3fd503c24c48ac476b7ee023aba74/run.sh#L120)
 
 ### How To Use This Repository
 
 The easiest way would be to fork this repository and start editing the files. If you are looking for a quick CI test on your local machine, refer to the above section.
+
+### Useful Scripts
+
+The folder `useful-scripts` contains a collection of Bash scripts which could be potentially useful to your needs. I have tried to make them as generic as possible but your requirements may require additional changes.
 
 ### File Manifest
 
@@ -58,14 +62,15 @@ This section provides a quick glimpse of the folders/files and their purpose:
 | File/Folder | Purpose |
 | --- | --- |
 | .semaphore | SemaphoreCI config |
+| docker-image-src | source code of Docker image |
+| docker-scripts | Bash scripts used inside containers(s) |
+| host-scripts | Bash scripts used inside host |
 | my-plugin | WordPress plugin* |
 | my-theme | WordPress theme* |
-| docker-scripts | shell scripts used inside containers(s) |
-| host-scripts | shell scripts used inside host |
+| useful-scripts | collection of (potentially) usefully Bash scripts |
 | wp-browser | WP-Browser and CI tests |
 | .gitignore | Git ignore file |
 | docker-compose.yml | Docker container definitions |
 | README.md | this file |
-| docker-image-src | source code of Docker image |
 
 >\* Generated scaffold using wp-cli
