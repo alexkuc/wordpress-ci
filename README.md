@@ -25,7 +25,7 @@ For each supported CI provider (a list of supported providers is available below
 - caching of Composer (`vendor` folder)
 - save/export of artifacts if CI tests fail (`wp-browser/tests/_output` folder)
 
-The Docker image is based off [visiblevc/wordpress-starter](https://github.com/visiblevc/wordpress-starter). The only difference between this image and the one this repository uses is the installation of [PDO driver](https://www.php.net/manual/en/ref.pdo-mysql.php) for MySQL which is necessary in order to configure [CodeCeption](https://github.com/visiblevc/wordpress-starter). Source code of the Docker image is available in the folder `docker-image-src`. This is provided in case you have security concerns in using my own image, so you can compile yours (don't forget to modify `docker-compose.yml` to use your own image).
+The Docker image is based off [visiblevc/wordpress-starter](https://github.com/visiblevc/wordpress-starter). The only difference between this image and the one this repository uses is the installation of [PDO driver](https://www.php.net/manual/en/ref.pdo-mysql.php) for MySQL which is necessary in order to configure [CodeCeption](https://github.com/visiblevc/wordpress-starter). Source code of the Docker images are available in the folder `docker-image-src`. This is provided in case you have security concerns in using my own image, so you can compile yours (don't forget to modify `docker-compose.yml` to use your own image).
 
 Please note that this is a very generic repository and for your specific needs you will probably need to adjust the configuration. Additionally, this repository was developed on Mac using [Docker Toolbox](https://docs.docker.com/toolbox/toolbox_install_mac/) (**not** [Docker Desktop for Mac](https://docs.docker.com/docker-for-mac/install/)). For a comparison of differences, refer to this [link](https://docs.docker.com/docker-for-mac/docker-toolbox/). As such, you may or may not need to adjust the execution of scripts and `docker-compose.yml` depending on your specific Docker host implementation.
 
@@ -34,6 +34,7 @@ Please note that this is a very generic repository and for your specific needs y
 ### Supported CI Providers
 
 - SemaphoreCI
+- GitLab (shared runner)
 
 ### How to Use Run Tests
 
@@ -57,7 +58,11 @@ In order to build your own image using the source files provided in the folder `
 docker build -t <name:tag> .
 ```
 
-where `-t <name:tag>` is optional. For more information, refer to [`docker build docs`](https://docs.docker.com/engine/reference/commandline/build/).
+where `-t <name:tag>` is optional. For more information, refer to [`docker build docs`](https://docs.docker.com/engine/reference/commandline/build/). Each image was moved into its own sub-folder to provide a better organization.
+
+| Sub-folder | Purpose |
+| docker-compose | used by `docker-compose.yml` |
+| gitlab-shared-runner | used by `.gitlab-ci.yml` |
 
 ### How To Use This Repository
 
