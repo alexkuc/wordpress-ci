@@ -1,0 +1,34 @@
+image: alexkuc/docker:gitlab-shared-runner
+services:
+  - docker:dind
+
+stages:
+  - test
+
+cache:
+  key:
+    files:
+      - wp-browser/composer.lock
+      - wp-browser/composer.json
+  paths:
+    - wp-browser/vendor/
+
+tests:
+  stage: test
+  timeout: 5m
+
+  script:
+    - ./host-scripts/up.sh
+    - ./host-scripts/composer.sh
+    - ./host-scripts/test.sh
+
+  variables:
+    # prevent health check errors
+    # https://gitlab.com/gitlab-org/gitlab-foss/issues/64775
+    SERVICE_PORT_2376_TCP_PORT: 2375
+
+  artifacts:
+    paths:
+      - wp-browser/tests/_output/
+    when: on_failure
+    expire_in: 1 week
