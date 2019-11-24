@@ -29,6 +29,8 @@ The Docker image is based off [visiblevc/wordpress-starter](https://github.com/v
 
 Please note that this is a very generic repository and for your specific needs you will probably need to adjust the configuration. Additionally, this repository was developed on Mac using [Docker Toolbox](https://docs.docker.com/toolbox/toolbox_install_mac/) (**not** [Docker Desktop for Mac](https://docs.docker.com/docker-for-mac/install/)). For a comparison of differences, refer to this [link](https://docs.docker.com/docker-for-mac/docker-toolbox/). As such, you may or may not need to adjust the execution of scripts and `docker-compose.yml` depending on your specific Docker host implementation.
 
+>Extra bonus: navigate to `docker-machine ip:22222` to open `phpMyAdmin` which allows large SQL import (see `configs/large-sql-import.ini`)
+
 ### Supported CI Providers
 
 - SemaphoreCI
@@ -46,6 +48,16 @@ To use the vanilla setup for WordPress i.e. without specific CI configuration, f
 >\*\* The script `test.sh` supports position arguments `$1` and `$2` so you can execute a specific instead of running the entire suite, e.g. `./host-scripts/test.sh acceptance PluginCest:activatePlugin`
 
 >Scripts inside the folder `docker-scripts` are automatically executed by Docker container, see [L120 of `run.sh`](https://github.com/visiblevc/wordpress-starter/blob/0b45d216f8e3fd503c24c48ac476b7ee023aba74/run.sh#L120)
+
+### How To Build Image
+
+In order to build your own image using the source files provided in the folder `docker-image-src`, execute the following command:
+
+```
+docker build -t <name:tag> .
+```
+
+where `-t <name:tag>` is optional. For more information, refer to [`docker build docs`](https://docs.docker.com/engine/reference/commandline/build/).
 
 ### How To Use This Repository
 

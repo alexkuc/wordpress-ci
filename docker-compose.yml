@@ -2,7 +2,7 @@ version: '3'
 services:
 
   wordpress:
-    image: alexkuc/wordpress:mysql_pdo
+    image: alexkuc/wordpress:mysql-pdo-xdebug
     container_name: wordpress
 
     cap_add:
