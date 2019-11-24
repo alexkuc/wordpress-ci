@@ -1,0 +1,44 @@
+version: '3'
+services:
+
+    wordpress:
+        image: alexkuc/wordpress:mysql_pdo
+        container_name: wordpress
+
+        cap_add:
+            - SYS_ADMIN
+            - CHOWN
+            - SETGID
+            - SETUID
+        devices:
+            - /dev/fuse
+        security_opt:
+            - apparmor:unconfined
+
+        ports:
+            - 8080:80
+            - 443:443
+
+        volumes:
+            - ./scripts:/docker-entrypoint-initwp.d
+            - ./wp-browser:/wp-browser
+            - ./my-theme/:/my-theme
+            - ./my-plugin:/my-plugin
+
+        environment:
+            DB_NAME: wordpress
+            DB_PASS: root
+
+    db:
+        image: mysql:5.7
+        container_name: db
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin
+        ports:
+            - 22222:80
