@@ -18,9 +18,9 @@ tests:
   timeout: 5m
 
   script:
-    - ./host-scripts/up.sh
-    - ./host-scripts/composer.sh
-    - ./host-scripts/test.sh
+    - host-scripts/up.sh
+    - host-scripts/composer.sh
+    - host-scripts/test.sh
 
   variables:
     # prevent health check errors
