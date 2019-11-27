@@ -27,7 +27,7 @@ DOCKER_IMAGE=''
 
 if [ -n "$IS_BIN" ]; then
     echo 'Executing command locally...';
-    (cd $EXEC_PATH_LOCAL && eval $CMD_LOCAL)
+    (cd "$EXEC_PATH_LOCAL" && eval "$CMD_LOCAL")
 
 else
     echo 'Executing command via Docker container...';
@@ -39,5 +39,5 @@ else
     docker run --rm \
                 -v "$EXEC_PATH_LOCAL:$EXEC_PATH_DOCKER" \
                 -w "$EXEC_PATH_DOCKER" \
-                $DOCKER_IMAGE bash -c "$CMD_DOCKER"
+                "$DOCKER_IMAGE" bash -c "$CMD_DOCKER"
 fi
