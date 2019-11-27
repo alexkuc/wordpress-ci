@@ -19,17 +19,17 @@ blocks:
             - checkout
             - export COMPOSER_JSON="$(checksum ./wp-browser/composer.lock)"
             - export COMPOSER_LOCK="$(checksum ./wp-browser/composer.json)"
-            - ./host-scripts/up.sh
+            - host-scripts/up.sh
             - cache restore "composer-$COMPOSER_LOCK-$COMPOSER_JSON"
-            - ./host-scripts/composer.sh
-            - ./.semaphore/fix-permissions.sh
-            - ./host-scripts/test.sh
+            - host-scripts/composer.sh
+            - .semaphore/fix-permissions.sh
+            - host-scripts/test.sh
 
       epilogue:
         on_pass:
           commands:
-            - cache store "composer-$COMPOSER_LOCK-$COMPOSER_JSON" ./wp-browser/vendor
+            - cache store "composer-$COMPOSER_LOCK-$COMPOSER_JSON" wp-browser/vendor
 
         on_fail:
           commands:
-            - artifact push job ./wp-browser/tests/_output/
+            - artifact push job wp-browser/tests/_output/
