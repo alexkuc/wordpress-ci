@@ -1,8 +1,11 @@
-#!/bin/bash -e
-
+#!/bin/bash
+# credit goes to Van Eyck
+# see https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
 COUNT=0
+LOGS=''
 
 ./host-scripts/docker-machine-start.sh
 
@@ -12,15 +15,12 @@ docker-compose pull
 echo 'Starting docker-compose in detached state...'
 docker-compose up -d
 
-check_logs () {
-    LOGS=$(docker-compose logs | grep -E ".*?WordPress Configuration Complete\!.*" || true)
-}
-
 echo 'Waiting for wordpress container to be ready...'
 
-while [ -z "$LOGS" ]; do
+until [ -n "$LOGS" ]
+do
     sleep 1
     ((COUNT=COUNT+1))
     echo "Waiting for wordpress container to be ready... $COUNT"
-    check_logs
+    LOGS="$(docker-compose logs | grep -E ".*?WordPress Configuration Complete\!.*" || echo '')"
 done

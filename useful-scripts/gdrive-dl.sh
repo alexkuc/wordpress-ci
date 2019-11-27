@@ -35,13 +35,13 @@ echo "Downloading file $FILE_NAME..."
 # suppress progress bar from curl but keep errors (stderr)
 # https://stackoverflow.com/a/21109454
 curl -sS -c ./cookie -s -L "$GDRIVE_URL1${GDRIVE_ID}" > /dev/null
-curl -sS -Lb ./cookie "$GDRIVE_URL2`awk '/download/ {print $NF}' ./cookie`&id=${GDRIVE_ID}" -o ${FILE_NAME}
+curl -sS -Lb ./cookie "$GDRIVE_URL2$(awk '/download/ {print $NF}' ./cookie)&id=${GDRIVE_ID}" -o "${FILE_NAME}"
 rm cookie
 
 if [ -n "$FILE_MD5" ]; then
 
     MD5_EXPECTED="$FILE_MD5  $FILE_NAME"
-    MD5_ACTUAL=$(md5sum $FILE_NAME)
+    MD5_ACTUAL="$(md5sum "$FILE_NAME")"
 
     if [ "$MD5_ACTUAL" != "$MD5_EXPECTED" ]; then
 
@@ -52,13 +52,13 @@ if [ -n "$FILE_MD5" ]; then
         echo "Received $MD5_ACTUAL!"
         echo ""
         echo "Removing corrupted download... $FILE_NAME"
-        rm $FILE_NAME
+        rm "$FILE_NAME"
 
         exit 1
     fi
 
     if [[ "$CI" == 'true' ]]; then
-        cache store "$FILE_NAME-$FILE_MD5" $FILE_NAME
+        cache store "$FILE_NAME-$FILE_MD5" "$FILE_NAME"
     fi
 
 fi
