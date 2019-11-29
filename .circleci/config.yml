@@ -36,10 +36,10 @@ jobs:
           name: Run CI tests
           no_output_timeout: 5m
           command: |
-            host-scripts/up.sh
-            host-scripts/setup.sh
+            scripts/host/up.sh
+            scripts/code/setup.sh
             .circleci/fix-permissions.sh
-            host-scripts/test.sh
+            scripts/code/test.sh
       - save_cache:
           key: composer-{{ checksum "wp-browser/composer.json" }}-{{ checksum "wp-browser/composer.lock" }}
           paths:

@@ -8,7 +8,7 @@ COUNT=0
 LOGS=''
 
 if [ -z "${CI:-}" ]; then
-    . host-scripts/docker-machine-start.sh
+    . scripts/host/docker-machine-start.sh
 fi
 
 echo 'Pulling latest docker images...'

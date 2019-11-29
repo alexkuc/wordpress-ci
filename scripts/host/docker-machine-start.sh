@@ -16,8 +16,8 @@ if [ "$0" = "${BASH_SOURCE[0]}" ]; then
   echo 'You need to source this script!'
   echo 'Otherwise you will not inherite environment variables!'
   echo ''
-  echo 'Correct usage: source host-scripts/docker-machine-start.sh'
-  echo 'Correct usage: . host-scripts/docker-machine-start.sh'
+  echo 'Correct usage: source scripts/host/docker-machine-start.sh'
+  echo 'Correct usage: . scripts/host/docker-machine-start.sh'
   echo ''
 
   exit 1

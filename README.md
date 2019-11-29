@@ -40,13 +40,13 @@ Please note that this is a very generic repository and for your specific needs y
 
 To use the vanilla setup for WordPress i.e. without specific CI configuration, follow these steps:
 
-1. Start docker containers, e.g. `./host-scripts/up.sh`
-2. Install Composer dependencies, e.g. `./host-scripts/composer.sh`\*
-3. Run CI tests, e.g. `./host-scripts/test.sh`\*\*
+1. Start docker containers, e.g. `./scripts/host/up.sh`
+2. Install Composer dependencies, e.g. `./scripts/code/composer.sh`\*
+3. Run CI tests, e.g. `./scripts/code/test.sh`\*\*
 
 >\* This script uses dual configuration, where initially it tries to install dependencies using a locally installed Docker and if none is found, it defaults to [dockerized composer](https://hub.docker.com/_/composer)
 
->\*\* The script `test.sh` supports position arguments `$1` and `$2` so you can execute a specific instead of running the entire suite, e.g. `./host-scripts/test.sh acceptance PluginCest:activatePlugin`
+>\*\* The script `scripts/code/test.sh` supports position arguments `$1` and `$2` so you can execute a specific instead of running the entire suite, e.g. `./scripts/host/test.sh acceptance PluginCest:activatePlugin`
 
 >Scripts inside the folder `docker-scripts` are automatically executed by Docker container, see [L120 of `run.sh`](https://github.com/visiblevc/wordpress-starter/blob/0b45d216f8e3fd503c24c48ac476b7ee023aba74/run.sh#L120)
 
@@ -70,7 +70,7 @@ The easiest way would be to fork this repository and start editing the files. If
 
 ### Useful Scripts
 
-The folder `useful-scripts` contains a collection of Bash scripts which could be potentially useful to your needs. I have tried to make them as generic as possible but your requirements may require additional changes.
+The folder `scripts/code` contains a collection of Bash scripts which could be potentially useful to your needs. I have tried to make them as generic as possible but your requirements may require additional changes.
 
 ### Configs
 
@@ -85,11 +85,9 @@ This section provides a quick glimpse of the folders/files and their purpose:
 | .semaphore | SemaphoreCI config |
 | configs | folder with various config files |
 | docker-image-src | source code of Docker image |
-| docker-scripts | Bash scripts used inside containers(s) |
-| host-scripts | Bash scripts used inside host |
 | my-plugin | WordPress plugin* |
 | my-theme | WordPress theme* |
-| useful-scripts | collection of (potentially) usefully Bash scripts |
+| scripts | collection of Bash scripts |
 | wp-browser | WP-Browser and CI tests |
 | .gitignore | Git ignore file |
 | docker-compose.yml | Docker container definitions |
