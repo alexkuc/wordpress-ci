@@ -1,5 +1,7 @@
-#!/bin/bash -e
-
+#!/bin/bash
+# credit goes to Van Eyck
+# see https://vaneyckt.io/posts/safer_bash_scripts_with_set_euxo_pipefail/
+set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
 # this script allows to download files from Google Drive
@@ -15,14 +17,14 @@ FILE_MD5="$3"
 GDRIVE_URL1="https://drive.google.com/uc?export=download&id="
 GDRIVE_URL2="https://drive.google.com/uc?export=download&confirm="
 
-if [[ "$CI" == 'true' ]]; then
+if [ "$CI" == 'true' ]; then
     # restore file from cache
     # SemaphoreCI restores caches on _partial_ key match
     # so even if MD5 is omitted, a match would still occur
     cache restore "$FILE_NAME-$FILE_MD5"
 fi
 
-if [[ -e "$FILE_NAME" ]]; then
+if [ -e "$FILE_NAME" ]; then
     # either the file exists as it is a local development machine
     # or CI has successfully restored cache
     echo "Skipping download of the $FILE_NAME (file is already present!)"
@@ -48,16 +50,18 @@ if [ -n "$FILE_MD5" ]; then
         echo ""
         echo "Failed to properly download $FILE_NAME!"
         echo "MD5 sum mismatch!"
+        echo ""
         echo "Expected $MD5_EXPECTED!"
         echo "Received $MD5_ACTUAL!"
         echo ""
         echo "Removing corrupted download... $FILE_NAME"
         rm "$FILE_NAME"
+        echo ""
 
         exit 1
     fi
 
-    if [[ "$CI" == 'true' ]]; then
+    if [ "$CI" == 'true' ]; then
         cache store "$FILE_NAME-$FILE_MD5" "$FILE_NAME"
     fi
 

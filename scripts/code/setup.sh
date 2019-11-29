@@ -6,6 +6,6 @@ set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
 # install Composer depedencies for our code
-./useful-scripts/composer.sh "wp-browser"
-./useful-scripts/composer.sh "my-theme"
-./useful-scripts/composer.sh "my-plugin"
+./scripts/code/composer.sh "wp-browser"
+./scripts/code/composer.sh "my-theme"
+./scripts/code/composer.sh "my-plugin"

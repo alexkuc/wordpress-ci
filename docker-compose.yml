@@ -22,7 +22,7 @@ services:
     volumes:
     # bash scripts for docker (automatically executed)
     # see https://github.com/visiblevc/wordpress-starter/blob/0b45d216f8e3fd503c24c48ac476b7ee023aba74/run.sh#L120
-      - ./docker-scripts:/docker-entrypoint-initwp.d
+      - ./scripts/containers:/docker-entrypoint-initwp.d
     # CI tests
       - ./wp-browser:/wp-browser
     # wordpress

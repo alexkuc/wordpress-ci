@@ -9,7 +9,7 @@ IS_COMPOSER=$(command -v composer || true)
 if [ -z "${1:-}" ]; then
     echo ''
     echo 'You need to specify path where to install Composer depedencies'
-    echo 'For example: ./host-scripts/composer.sh "wp-browser"'
+    echo 'For example: ./scripts/code/composer.sh "wp-browser"'
     echo ''
     exit 1
 fi

@@ -14,8 +14,7 @@ else
     # locally while in CI, docker image used
     # refer to specific CI config for details
     if [ -z "${CI:-}" ]; then
-        ./host-scripts/shellcheck.sh
-        ./host-scripts/phplint.sh
+        ./scripts/code/lint.sh
     fi
     # each suite has to be executed separate as per suggestions provided by WP-Browser:
     # https://wpbrowser.wptestkit.dev/summary/welcome/faq#can-i-run-all-my-tests-with-one-command
