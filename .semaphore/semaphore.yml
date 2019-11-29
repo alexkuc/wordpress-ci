@@ -11,6 +11,21 @@ execution_time_limit:
 
 blocks:
 
+  - name: 'Linters'
+    task:
+      agent:
+        machine:
+          type: e1-standard-2
+          os_image: ubuntu1804
+        containers:
+          - name: ShellCheck
+            image: alexkuc/shellcheck:semaphoreci
+      jobs:
+        - name: 'ShellCheck'
+          commands:
+            - find . -type f -name '*.sh' | wc -l
+            - find . -type f -name '*.sh' | xargs shellcheck --external-sources
+
   - name: 'Job #1'
     task:
       jobs:
