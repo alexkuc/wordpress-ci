@@ -11,12 +11,17 @@ if [ -n "${CI:-}" ]; then
     exit 0
 fi
 
-echo ''
-echo 'WARNING! You need to source this script!'
-echo 'Do not run it via sub shell otherwise you will not inherite environment variables!'
-echo 'Correct usage: source host-scripts/docker-machine-start.sh'
-echo 'Correct usage: . host-scripts/docker-machine-start.sh'
-echo ''
+if [ "$0" = "${BASH_SOURCE[0]}" ]; then
+  echo ''
+  echo 'You need to source this script!'
+  echo 'Otherwise you will not inherite environment variables!'
+  echo ''
+  echo 'Correct usage: source host-scripts/docker-machine-start.sh'
+  echo 'Correct usage: . host-scripts/docker-machine-start.sh'
+  echo ''
+
+  exit 1
+fi
 
 MACHINE_NAME="${MACHINE_NAME:-default}"
 IS_RUNNING=$(docker-machine status "$MACHINE_NAME")
@@ -36,9 +41,17 @@ if [ "$IS_RUNNING" != 'Running' ]; then
         docker-machine-nfs "$MACHINE_NAME"
     fi
 else
+    echo ''
     echo 'Skipping docker-machine start!'
     echo "docker-machine $MACHINE_NAME is already running!"
 fi
 
+echo ''
 echo "Evalulating docker-machine env $MACHINE_NAME"
+echo ''
+
 eval "$(docker-machine env "$MACHINE_NAME")"
+
+# not unsetting safe-guards will cause issues as you need to source this script
+set +Eeuo pipefail
+trap - ERR
