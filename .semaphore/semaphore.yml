@@ -23,6 +23,7 @@ blocks:
       jobs:
         - name: 'ShellCheck'
           commands:
+            - checkout
             - find . -type f -name '*.sh' | wc -l
             - find . -type f -name '*.sh' | xargs shellcheck --external-sources
 
