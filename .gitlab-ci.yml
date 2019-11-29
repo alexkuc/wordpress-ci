@@ -19,7 +19,7 @@ tests:
 
   script:
     - host-scripts/up.sh
-    - host-scripts/composer.sh
+    - host-scripts/setup.sh
     - host-scripts/test.sh
 
   variables:

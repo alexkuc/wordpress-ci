@@ -6,8 +6,16 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 
 IS_COMPOSER=$(command -v composer || true)
 
+if [ -z "${1:-}" ]; then
+    echo ''
+    echo 'You need to specify path where to install Composer depedencies'
+    echo 'For example: ./host-scripts/composer.sh "wp-browser"'
+    echo ''
+    exit 1
+fi
+
 # Acronym: DEPS = Depedencies
-DEPS_DOCKER_PATH="/wp-browser"
+DEPS_DOCKER_PATH="$1"
 DEPS_LOCAL_PATH="$PWD/$DEPS_DOCKER_PATH"
 
 # --ignore-platform-reqs because php is run on docker container
@@ -19,35 +27,44 @@ PARALLEL_DL="composer global require hirak/prestissimo"
 
 if [ ! -d "$DEPS_LOCAL_PATH/vendor" ]; then
     if [ -n "$IS_COMPOSER" ]; then
-        if ! composer --quiet global show | grep -q 'hirak/prestissimo'; then
-            echo 'Installing (globally) hirak/prestissimo via local Composer...'
+        if ! composer global show | grep -q 'hirak/prestissimo'; then
+            echo ''
+            echo 'Installing globally hirak/prestissimo via local Composer...'
+            echo ''
+
             eval "$PARALLEL_DL"
         else
+            echo ''
             echo 'hirak/prestissimo is already installed, skipping installation...'
+            echo ''
         fi
 
         if [ ! -d "$DEPS_LOCAL_PATH/vendor" ]; then
-            echo 'Installing PHP depedencies via local Composer...'
+            echo ''
+            echo "Installing PHP depedencies via local Composer for folder $1..."
+            echo ''
+
             eval "$CMD_LOCAL" -d "$DEPS_LOCAL_PATH"
         fi
     else
+        echo ''
         echo 'Composer is not installed locally! Resorting to Docker...'
-
         echo 'Will (globally) install hirak/prestissimo inside Docker-based Composer container...'
-        CMD_DOCKER="$PARALLEL_DL"
+        echo "Will install PHP depedencies via Docker-based Composer container for folder $1..."
+        echo 'Running Composer commands via Docker-based Composer container...'
+        echo ''
 
-        echo 'Will install PHP depedencies via Docker-based Composer container...'
+        CMD_DOCKER="$PARALLEL_DL"
         CMD_DOCKER="$CMD_DOCKER && $CMD_LOCAL"
 
-        echo 'Running Composer commands via Docker-based Composer container...'
         docker run --rm \
-                    -v "$DEPS_LOCAL_PATH:$DEPS_DOCKER_PATH" \
-                    -w "$DEPS_DOCKER_PATH" \
+                    -v "$DEPS_LOCAL_PATH:/$DEPS_DOCKER_PATH" \
+                    -w "/$DEPS_DOCKER_PATH" \
                 composer bash -c "$CMD_DOCKER"
     fi
 else
     echo ''
-    echo 'Warning! Composer (vendor dir) is already present!'
-    echo 'Skipping installation of Composer depedencies!'
+    echo "Warning! Skipping Composer depedencies for folder '$1'!"
+    echo 'Warning! Vendor dir is already present!'
     echo ''
 fi
