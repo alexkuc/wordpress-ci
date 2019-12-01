@@ -17,14 +17,14 @@ FILE_MD5="$3"
 GDRIVE_URL1="https://drive.google.com/uc?export=download&id="
 GDRIVE_URL2="https://drive.google.com/uc?export=download&confirm="
 
-if [ "$CI" == 'true' ]; then
+if [[ "$CI" == 'true' ]]; then
     # restore file from cache
     # SemaphoreCI restores caches on _partial_ key match
     # so even if MD5 is omitted, a match would still occur
     cache restore "$FILE_NAME-$FILE_MD5"
 fi
 
-if [ -e "$FILE_NAME" ]; then
+if [[ -e "$FILE_NAME" ]]; then
     # either the file exists as it is a local development machine
     # or CI has successfully restored cache
     echo "Skipping download of the $FILE_NAME (file is already present!)"
@@ -40,12 +40,12 @@ curl -sS -c ./cookie -s -L "$GDRIVE_URL1${GDRIVE_ID}" > /dev/null
 curl -sS -Lb ./cookie "$GDRIVE_URL2$(awk '/download/ {print $NF}' ./cookie)&id=${GDRIVE_ID}" -o "${FILE_NAME}"
 rm cookie
 
-if [ -n "$FILE_MD5" ]; then
+if [[ -n "$FILE_MD5" ]]; then
 
     MD5_EXPECTED="$FILE_MD5  $FILE_NAME"
     MD5_ACTUAL="$(md5sum "$FILE_NAME")"
 
-    if [ "$MD5_ACTUAL" != "$MD5_EXPECTED" ]; then
+    if [[ "$MD5_ACTUAL" != "$MD5_EXPECTED" ]]; then
 
         echo ""
         echo "Failed to properly download $FILE_NAME!"
@@ -61,7 +61,7 @@ if [ -n "$FILE_MD5" ]; then
         exit 1
     fi
 
-    if [ "$CI" == 'true' ]; then
+    if [[ "$CI" == 'true' ]]; then
         cache store "$FILE_NAME-$FILE_MD5" "$FILE_NAME"
     fi
 

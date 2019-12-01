@@ -27,11 +27,14 @@ CMD_LOCAL="..."
 # Bash installed (see below for details)
 DOCKER_IMAGE=''
 
-if [ -n "$IS_BIN" ]; then
+if [[ -n "$IS_BIN" ]]; then
+    echo ''
     echo 'Executing command locally...';
+
     (cd "$EXEC_PATH_LOCAL" && eval "$CMD_LOCAL")
 
 else
+    echo ''
     echo 'Executing command via Docker container...';
 
     # allows to modify the command if Docker container
