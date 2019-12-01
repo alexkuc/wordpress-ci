@@ -7,11 +7,11 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 
 # do not run this script inside CI environment
 # it is intended to be run for local setups only
-if [ -n "${CI:-}" ]; then
+if [[ -n "${CI:-}" ]]; then
     exit 0
 fi
 
-if [ "$0" = "${BASH_SOURCE[0]}" ]; then
+if [[ "$0" = "${BASH_SOURCE[0]}" ]]; then
   echo ''
   echo 'You need to source this script!'
   echo 'Otherwise you will not inherite environment variables!'
@@ -31,12 +31,12 @@ IS_OSX=$(uname -s || true)
 IS_BREW=$(command -v brew || true)
 IS_NFS_MACHINE=$(command -v docker-machine-nfs || true)
 
-if [ "$IS_RUNNING" != 'Running' ]; then
+if [[ "$IS_RUNNING" != 'Running' ]]; then
     echo "Starting docker-machine $MACHINE_NAME"
     docker-machine start "$MACHINE_NAME"
     # performance fix for Docker on Mac (requires Brew and docker-machine-nfs)
     # https://github.com/covex-nn/docker-workflow-symfony/issues/1
-    if [ "$IS_OSX" = 'Darwin' ] && [ -n "$IS_BREW" ] && [ -n "$IS_NFS_MACHINE" ]; then
+    if [[ "$IS_OSX" = 'Darwin' && -n "$IS_BREW" && -n "$IS_NFS_MACHINE" ]]; then
         echo "Starting docker-machine-nfs $MACHINE_NAME"
         docker-machine-nfs "$MACHINE_NAME"
     fi

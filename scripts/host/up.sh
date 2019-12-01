@@ -7,7 +7,7 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 COUNT=0
 LOGS=''
 
-if [ -z "${CI:-}" ]; then
+if [[ -z "${CI:-}" ]]; then
     . scripts/host/docker-machine-start.sh
 fi
 
@@ -19,7 +19,7 @@ docker-compose up -d
 
 echo 'Waiting for wordpress container to be ready...'
 
-until [ -n "$LOGS" ]
+until [[ -n "$LOGS" ]]
 do
     sleep 1
     ((COUNT=COUNT+1))

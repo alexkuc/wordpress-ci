@@ -6,7 +6,7 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 
 IS_COMPOSER=$(command -v composer || true)
 
-if [ -z "${1:-}" ]; then
+if [[ -z "${1:-}" ]]; then
     echo ''
     echo 'You need to specify path where to install Composer depedencies'
     echo 'For example: ./scripts/code/composer.sh "wp-browser"'
@@ -27,7 +27,7 @@ fi
 DEPS_DOCKER_PATH="$1"
 DEPS_LOCAL_PATH="$PWD/$DEPS_DOCKER_PATH"
 
-if [ -n "${COMPOSER_PROD:-}" ]; then
+if [[ -n "${COMPOSER_PROD:-}" ]]; then
     echo ''
     echo 'Detected production environment for Composer...'
 
@@ -46,8 +46,8 @@ CMD_LOCAL="composer install $COMPOSER_OPTIONS"
 # https://github.com/hirak/prestissimo
 PARALLEL_DL="composer global require hirak/prestissimo"
 
-if [ ! -d "$DEPS_LOCAL_PATH/vendor" ]; then
-    if [ -n "$IS_COMPOSER" ]; then
+if [[ ! -d "$DEPS_LOCAL_PATH/vendor" ]]; then
+    if [[ -n "$IS_COMPOSER" ]]; then
         if ! composer global show | grep -q 'hirak/prestissimo'; then
             echo ''
             echo 'Installing globally hirak/prestissimo via local Composer...'
@@ -60,7 +60,7 @@ if [ ! -d "$DEPS_LOCAL_PATH/vendor" ]; then
             echo ''
         fi
 
-        if [ ! -d "$DEPS_LOCAL_PATH/vendor" ]; then
+        if [[ ! -d "$DEPS_LOCAL_PATH/vendor" ]]; then
             echo ''
             echo "Installing PHP depedencies via local Composer for folder $1..."
             echo ''

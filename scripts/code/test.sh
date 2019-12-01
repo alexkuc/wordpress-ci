@@ -7,13 +7,13 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 
 CMD='cd /wp-browser'
 
-if [ -n "${1:-}" ] && [ -n "${2:-}" ]; then
+if [[ -n "${1:-}" ]] && [[ -n "${2:-}" ]]; then
     CMD="$CMD && vendor/bin/codecept run $1 $2 --debug"
 else
     # 'shellcheck' and 'phplint' is executed
     # locally while in CI, docker image used
     # refer to specific CI config for details
-    if [ -z "${CI:-}" ]; then
+    if [[ -z "${CI:-}" ]]; then
         ./scripts/code/lint.sh
     fi
     # each suite has to be executed separate as per suggestions provided by WP-Browser:

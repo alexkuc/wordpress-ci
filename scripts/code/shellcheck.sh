@@ -14,7 +14,7 @@ CMD_LS="find . -type f -name '*.sh' -not -path \"*/vendor/*\""
 CMD_COUNT=$(eval "$CMD_LS" | wc -l | sed 's/^ *//')
 CMD_SHELLCHECK="$CMD_LS | xargs shellcheck"
 
-if [ -n "$IS_SHELLCHECK" ]; then
+if [[ -n "$IS_SHELLCHECK" ]]; then
     echo ''
     echo 'Using local ShellCheck...'
 
