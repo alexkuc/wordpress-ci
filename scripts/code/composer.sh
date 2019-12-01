@@ -11,6 +11,15 @@ if [ -z "${1:-}" ]; then
     echo 'You need to specify path where to install Composer depedencies'
     echo 'For example: ./scripts/code/composer.sh "wp-browser"'
     echo ''
+
+    exit 1
+fi
+
+if [[ ! -e "$1" ]]; then
+    echo ''
+    echo "The specified folder '$1' does not exist!"
+    echo ''
+
     exit 1
 fi
 
@@ -18,8 +27,20 @@ fi
 DEPS_DOCKER_PATH="$1"
 DEPS_LOCAL_PATH="$PWD/$DEPS_DOCKER_PATH"
 
+if [ -n "${COMPOSER_PROD:-}" ]; then
+    echo ''
+    echo 'Detected production environment for Composer...'
+
+    COMPOSER_OPTIONS="--no-dev --optimize-autoloader --ignore-platform-reqs"
+else
+    echo ''
+    echo 'Detected development environment for Composer...'
+
+    COMPOSER_OPTIONS="--ignore-platform-reqs"
+fi
+
 # --ignore-platform-reqs because php is run on docker container
-CMD_LOCAL="composer install --ignore-platform-reqs"
+CMD_LOCAL="composer install $COMPOSER_OPTIONS"
 
 # Downloads packages in parallel to speed up the installation process
 # https://github.com/hirak/prestissimo

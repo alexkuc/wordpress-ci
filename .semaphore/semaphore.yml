@@ -1,6 +1,14 @@
 version: v1.0
 name: WordPress CI Pipeline
 
+auto_cancel:
+  running:
+    when: "branch != 'master'"
+
+fail_fast:
+  stop:
+    when: "branch != 'master'"
+
 agent:
   machine:
     type: e1-standard-2
@@ -11,60 +19,74 @@ execution_time_limit:
 
 blocks:
 
-  - name: ShellCheck
+  - name: Linters
     dependencies: []
     task:
-      agent:
-        machine:
-          type: e1-standard-2
-          os_image: ubuntu1804
-        containers:
-          - name: shellcheck
-            image: alexkuc/shellcheck:semaphoreci
+      prologue:
+        commands:
+          - checkout
       jobs:
-        - name: Lint
+        - name: ShellCheck
           commands:
-            - checkout
-            - find . -type f -name '*.sh' | wc -l
-            - find . -type f -name '*.sh' | xargs shellcheck --external-sources
-
-  - name: phplint
-    dependencies: []
-    task:
-      agent:
-        machine:
-          type: e1-standard-2
-          os_image: ubuntu1804
-        containers:
-          - name: composer
-            image: composer
-      jobs:
-        - name: Lint
+            - scripts/code/shellcheck.sh
+        - name: phplint
           commands:
-            - checkout
+            - .semaphore/cache.sh restore
             - scripts/code/setup.sh
+            - .semaphore/cache.sh store
             - scripts/code/phplint.sh
 
-  - name: WP-Browser
-    dependencies: ['ShellCheck', 'phplint']
+  - name: Tests
+    dependencies: ['Linters']
     task:
+      epilogue:
+        on_fail:
+          commands:
+            - artifact push job wp-browser/tests/_output/
       jobs:
-        - name: Tests
+        - name: PHP
           commands:
             - checkout
-            - export COMPOSER_JSON="$(checksum ./wp-browser/composer.lock)"
-            - export COMPOSER_LOCK="$(checksum ./wp-browser/composer.json)"
             - scripts/host/up.sh
-            - cache restore "composer-$COMPOSER_LOCK-$COMPOSER_JSON"
+            - .semaphore/cache.sh restore
             - scripts/code/setup.sh
             - .semaphore/fix-permissions.sh
             - scripts/code/test.sh
 
-      epilogue:
-        on_pass:
+  - name: Assets
+    dependencies: ['Linters']
+    task:
+      env_vars:
+        - name: COMPOSER_PROD
+          value: '1'
+      jobs:
+        - name: Compile
           commands:
-            - cache store "composer-$COMPOSER_LOCK-$COMPOSER_JSON" wp-browser/vendor
+            - checkout
+            # do NOT restore cache here as we are using
+            # production depedencies (--no-dev), see
+            # scripts/code/composer.sh for details
+            - scripts/code/setup.sh
+            - artifact push workflow my-theme
+            - artifact push workflow my-plugin
 
-        on_fail:
+  - name: Deploy
+    # skip:
+    #   when: "branch != 'master'"
+    dependencies: ['Assets', 'Tests']
+    task:
+      prologue:
+        commands:
+          - checkout
+          - sudo chmod -R 777 .
+      jobs:
+        - name: Theme
           commands:
-            - artifact push job wp-browser/tests/_output/
+            - artifact pull workflow my-theme --force
+            - scripts/code/deploy.sh my-theme
+            - artifact push project my-theme/my-theme.zip --force
+        - name: Plugin
+          commands:
+            - artifact pull workflow my-plugin --force
+            - scripts/code/deploy.sh my-plugin
+            - artifact push project my-plugin/my-plugin.zip --force
