@@ -9,3 +9,9 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 ./scripts/code/composer.sh "wp-browser"
 ./scripts/code/composer.sh "my-theme"
 ./scripts/code/composer.sh "my-plugin"
+
+# run scripts/commands here to build assets locally
+# e.g. ./scripts/code/bootstrap.sh or ./scripts/code/node.sh
+# use scripts/code/local_or_docker_skeleton.sh if you need
+# to invoke a binary which may not be present locally for
+# extra portability of this local setup

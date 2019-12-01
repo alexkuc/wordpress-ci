@@ -4,4 +4,4 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
-docker build -t alexkuc/shellcheck:semaphoreci .
+docker build -t alexkuc/wordpress:cli-zip .
