@@ -5,10 +5,14 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
-CMD='cd /wp-browser'
+CODECEPT='vendor/bin/codecept'
 
-if [[ -n "${1:-}" ]] && [[ -n "${2:-}" ]]; then
-    CMD="$CMD && vendor/bin/codecept run $1 $2 --debug"
+CMD="cd /wp-browser && $CODECEPT build"
+
+if [[ -n "${1:-}" ]]; then
+    CMD="$CMD && $CODECEPT run $1 --debug"
+elif [[ -n "${1:-}" && -n "${2:-}" ]]; then
+    CMD="$CMD && $CODECEPT run $1 $2 --debug"
 else
     # 'shellcheck' and 'phplint' is executed
     # locally while in CI, docker image used
@@ -19,10 +23,10 @@ else
     # each suite has to be executed separate as per suggestions provided by WP-Browser:
     # https://wpbrowser.wptestkit.dev/summary/welcome/faq#can-i-run-all-my-tests-with-one-command
     CMD="$CMD && \
-    vendor/bin/codecept run acceptance --debug && \
-    vendor/bin/codecept run functional --debug && \
-    vendor/bin/codecept run wpunit --debug && \
-    vendor/bin/codecept run unit --debug"
+    $CODECEPT run acceptance --debug && \
+    $CODECEPT run functional --debug && \
+    $CODECEPT run wpunit --debug && \
+    $CODECEPT run unit --debug"
 fi
 
 docker exec wordpress bash -c "$CMD"

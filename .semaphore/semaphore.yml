@@ -15,12 +15,41 @@ agent:
     os_image: ubuntu1804
 
 execution_time_limit:
-  minutes: 5
+  minutes: 10
 
 blocks:
 
-  - name: Linters
+  - name: Setup
     dependencies: []
+    task:
+      prologue:
+        commands:
+          - checkout
+      jobs:
+        - name: SemaphoreCI config
+          commands:
+            - echo 'SemaphoreCI config is fine if this message is printed!'
+        - name: Composer (--dev)
+          env_vars:
+            - name: CI_COMPOSER
+              value: '1'
+          commands:
+            - .semaphore/composer/cache-restore.sh
+            - scripts/code/setup.sh
+            - .semaphore/composer/cache-store.sh
+        - name: Composer (--no-dev)
+          env_vars:
+            - name: CI_COMPOSER
+              value: '1'
+            - name: CI_COMPOSER_NO_DEV
+              value: '1'
+          commands:
+            - .semaphore/composer/cache-restore.sh
+            - scripts/code/setup.sh
+            - .semaphore/composer/cache-store.sh
+
+  - name: Linters
+    dependencies: ['Setup']
     task:
       prologue:
         commands:
@@ -31,62 +60,60 @@ blocks:
             - scripts/code/shellcheck.sh
         - name: phplint
           commands:
-            - .semaphore/cache.sh restore
-            - scripts/code/setup.sh
-            - .semaphore/cache.sh store
+            - .semaphore/composer/cache-restore.sh
             - scripts/code/phplint.sh
 
-  - name: Tests
-    dependencies: ['Linters']
+  - name: PHP Tests
+    dependencies: ['Setup']
     task:
+      prologue:
+        commands:
+          - checkout
+          - .semaphore/composer/cache-restore.sh
+          - sudo chmod -R 777 .
+          - scripts/host/up.sh
       epilogue:
         on_fail:
           commands:
             - artifact push job wp-browser/tests/_output/
       jobs:
-        - name: PHP
+        - name: acceptance
           commands:
-            - checkout
-            - scripts/host/up.sh
-            - .semaphore/cache.sh restore
-            - scripts/code/setup.sh
-            - .semaphore/fix-permissions.sh
-            - scripts/code/test.sh
+            - scripts/code/test.sh acceptance
+        - name: functional
+          commands:
+            - scripts/code/test.sh functional
+        - name: wpunit
+          commands:
+            - scripts/code/test.sh wpunit
+        - name: unit
+          commands:
+            - scripts/code/test.sh unit
 
   - name: Assets
-    dependencies: ['Linters']
-    task:
-      env_vars:
-        - name: COMPOSER_PROD
-          value: '1'
-      jobs:
-        - name: Compile
-          commands:
-            - checkout
-            # do NOT restore cache here as we are using
-            # production depedencies (--no-dev), see
-            # scripts/code/composer.sh for details
-            - scripts/code/setup.sh
-            - artifact push workflow my-theme
-            - artifact push workflow my-plugin
-
-  - name: Deploy
-    # skip:
-    #   when: "branch != 'master'"
-    dependencies: ['Assets', 'Tests']
+    dependencies: ['Setup']
     task:
       prologue:
         commands:
           - checkout
-          - sudo chmod -R 777 .
+      jobs:
+        - name: Minifier
+          commands:
+            - echo 'minifier placeholder'
+        - name: '???'
+          commands:
+            - echo '??? placeholder'
+
+  - name: Deploy
+    dependencies: ['Linters', 'PHP Tests', 'Assets']
+    task:
+      prologue:
+        commands:
+          - checkout
       jobs:
         - name: Theme
           commands:
-            - artifact pull workflow my-theme --force
-            - scripts/code/deploy.sh my-theme
-            - artifact push project my-theme/my-theme.zip --force
+            - echo '...'
         - name: Plugin
           commands:
-            - artifact pull workflow my-plugin --force
-            - scripts/code/deploy.sh my-plugin
-            - artifact push project my-plugin/my-plugin.zip --force
+            - echo '...'
