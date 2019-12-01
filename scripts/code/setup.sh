@@ -5,10 +5,13 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
-# install Composer depedencies for our code
-./scripts/code/composer.sh "wp-browser"
-./scripts/code/composer.sh "my-theme"
-./scripts/code/composer.sh "my-plugin"
+# install Composer depedencies if $CI is not defined or
+# $CI and $COMPOSER is defined (to any value)
+if [[ -z "${CI:-}" ]] || [[ -n "${CI:-}" && -n "${CI_COMPOSER:-}" ]]; then
+    ./scripts/code/composer.sh "wp-browser"
+    ./scripts/code/composer.sh "my-theme"
+    ./scripts/code/composer.sh "my-plugin"
+fi
 
 # run scripts/commands here to build assets locally
 # e.g. ./scripts/code/bootstrap.sh or ./scripts/code/node.sh

@@ -27,7 +27,7 @@ fi
 DEPS_DOCKER_PATH="$1"
 DEPS_LOCAL_PATH="$PWD/$DEPS_DOCKER_PATH"
 
-if [[ -n "${COMPOSER_PROD:-}" ]]; then
+if [[ -n "${CI_COMPOSER_NO_DEV:-}" ]]; then
     echo ''
     echo 'Detected production environment for Composer...'
 

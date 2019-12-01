@@ -4,4 +4,8 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
-chmod -R 777 .
+. .semaphore/composer/cache-checksums.sh
+
+./.semaphore/cache.sh store "$WP_BROWSER_COMPOSER" 'wp-browser'
+./.semaphore/cache.sh store "$MY_THEME_COMPOSER" 'my-theme'
+./.semaphore/cache.sh store "$MY_PLUGIN_COMPOSER" 'my-plugin'
