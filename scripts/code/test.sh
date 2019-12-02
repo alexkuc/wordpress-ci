@@ -9,6 +9,22 @@ CODECEPT='vendor/bin/codecept'
 
 CMD="cd /wp-browser && $CODECEPT build"
 
+if [[ -e "wp-browser/tests/_output/failed" ]]; then
+    echo ''
+    echo "Detected 'failed' file..."
+    echo 'Overriding user parameters...'
+    echo 'Re-running failed tests...'
+    echo ''
+    echo "Hint: delete 'failed' file to stop this!"
+    echo 'Path: wp-browser/tests/_output/failed'
+    echo ''
+
+    # override positional (user) parameters to run
+    # 'codecept run -g failed', for mroe details see:
+    # https://codeception.com/extensions#RunFailed
+    set -- '-g' 'failed'
+fi
+
 # 'shellcheck' and 'phplint' is executed
 # locally while in CI, docker image used
 # refer to specific CI config for details

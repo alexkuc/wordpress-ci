@@ -44,6 +44,7 @@ else
     echo ''
     echo 'Skipping docker-machine start!'
     echo "docker-machine $MACHINE_NAME is already running!"
+    echo ''
 fi
 
 echo ''

@@ -7,8 +7,18 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 COUNT=0
 LOGS=''
 
-if [[ -z "${CI:-}" ]]; then
-    . scripts/host/docker-machine-start.sh
+if [[ -z "${CI:-}" && -z "${DOCKER_HOST:-}" ]]; then
+    echo ''
+    # shellcheck disable=SC2016
+    echo 'Variables $DOCKER_HOST is empty...'
+    echo ''
+    echo 'Did you forget to source docker-machine-start.sh?'
+    echo ''
+    echo 'Example: . scripts/host/docker-machine-start.sh'
+    echo 'Example: source scripts/host/docker-machine-start.sh'
+    echo ''
+
+    exit 1
 fi
 
 echo 'Pulling latest docker images...'
