@@ -5,12 +5,8 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
-# install Composer depedencies if $CI is not defined or
-# $CI and $COMPOSER is defined (to any value)
-if [[ -z "${CI:-}" ]] || [[ -n "${CI:-}" && -n "${CI_COMPOSER:-}" ]]; then
-    ./scripts/code/composer.sh 'test'
-    ./scripts/code/composer.sh 'src'
-fi
+./scripts/code/composer.sh 'test'
+./scripts/code/composer.sh 'src'
 
 # run scripts/commands here to build assets locally
 # e.g. ./scripts/code/bootstrap.sh or ./scripts/code/node.sh
