@@ -10,7 +10,6 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 if [[ -z "${CI:-}" ]] || [[ -n "${CI:-}" && -n "${CI_COMPOSER:-}" ]]; then
     ./scripts/code/composer.sh "wp-browser"
     ./scripts/code/composer.sh "my-theme"
-    ./scripts/code/composer.sh "my-plugin"
 fi
 
 # run scripts/commands here to build assets locally
