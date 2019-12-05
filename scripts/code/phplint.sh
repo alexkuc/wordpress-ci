@@ -16,9 +16,3 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
     cd my-theme
     ./vendor/bin/phplint
 )
-
-# lint my-plugin
-(
-    cd my-plugin
-    ./vendor/bin/phplint
-)
