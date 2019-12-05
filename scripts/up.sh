@@ -14,8 +14,8 @@ if [[ -z "${CI:-}" && -z "${DOCKER_HOST:-}" ]]; then
     echo ''
     echo 'Did you forget to source docker-machine-start.sh?'
     echo ''
-    echo 'Example: . scripts/host/docker-machine-start.sh'
-    echo 'Example: source scripts/host/docker-machine-start.sh'
+    echo 'Example: . scripts/docker-machine-start.sh'
+    echo 'Example: source scripts/docker-machine-start.sh'
     echo ''
 
     exit 1

@@ -40,13 +40,13 @@ Please note that this is a very generic repository and for your specific needs y
 
 To use the vanilla setup for WordPress i.e. without specific CI configuration, follow these steps:
 
-1. Start docker containers, e.g. `./scripts/host/up.sh`
-2. Install Composer dependencies, e.g. `./scripts/code/composer.sh`\*
-3. Run CI tests, e.g. `./scripts/code/test.sh`\*\*
+1. Start docker containers, e.g. `./scripts/up.sh`
+2. Install Composer dependencies, e.g. `./scripts/php/composer.sh`\*
+3. Run CI tests, e.g. `./scripts/test.sh`\*\*
 
 >\* This script uses dual configuration, where initially it tries to install dependencies using a locally installed Docker and if none is found, it defaults to [dockerized composer](https://hub.docker.com/_/composer)
 
->\*\* The script `scripts/code/test.sh` supports position arguments `$1` and `$2` so you can execute a specific instead of running the entire suite, e.g. `./scripts/host/test.sh acceptance PluginCest:activatePlugin`
+>\*\* The script `scripts/test.sh` supports position arguments `$1` and `$2` so you can execute a specific instead of running the entire suite, e.g. `./scripts/test.sh acceptance PluginCest:activatePlugin`
 
 >Scripts inside the folder `docker-scripts` are automatically executed by Docker container, see [L120 of `run.sh`](https://github.com/visiblevc/wordpress-starter/blob/0b45d216f8e3fd503c24c48ac476b7ee023aba74/run.sh#L120)
 

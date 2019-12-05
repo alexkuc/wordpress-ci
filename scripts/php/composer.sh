@@ -9,7 +9,7 @@ IS_COMPOSER=$(command -v composer || true)
 if [[ -z "${1:-}" ]]; then
     echo ''
     echo 'You need to specify path where to install Composer depedencies'
-    echo "For example: ./scripts/code/composer.sh 'test'"
+    echo "For example: ./scripts/php/composer.sh 'test'"
     echo ''
 
     exit 1

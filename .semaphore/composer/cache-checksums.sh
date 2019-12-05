@@ -17,14 +17,14 @@ if [[ "$0" = "${BASH_SOURCE[0]}" ]]; then
 fi
 
 function calculate_checksum {
-  COMPOSER_JSON="$(checksum ./"$1"/composer.lock)"
-  COMPOSER_LOCK="$(checksum ./"$1"/composer.json)"
+  COMPOSER_JSON="$(checksum ./"$1"/composer.json)"
+  COMPOSER_LOCK="$(checksum ./"$1"/composer.lock)"
   if [[ -n "${CI_COMPOSER_NO_DEV:-}" ]]; then
     COMPOSER_MODE='no-dev'
   else
     COMPOSER_MODE='dev'
   fi
-  echo "composer-$COMPOSER_MODE-$COMPOSER_LOCK-$COMPOSER_JSON"
+  echo "composer-$COMPOSER_MODE-$COMPOSER_JSON-$COMPOSER_LOCK"
   exit 0
 }
 
