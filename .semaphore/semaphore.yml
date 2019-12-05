@@ -19,24 +19,25 @@ execution_time_limit:
 
 blocks:
 
-  - name: Setup
+  - name: Prepare cache
     dependencies: []
     task:
       prologue:
         commands:
           - checkout
       jobs:
-        - name: SemaphoreCI config
-          commands:
-            - echo 'SemaphoreCI config is fine if this message is printed!'
-        - name: Composer (--dev)
+        - name: Composer cache (--dev)
           commands:
             - .semaphore/composer/cache-restore.sh
-            - scripts/code/setup.sh
+            - scripts/setup.sh
             - .semaphore/composer/cache-store.sh
+        - name: NodeJS cache
+          commands:
+            # TODO: setup caching of NodeJS deps
+            - echo '...'
 
   - name: Linters
-    dependencies: ['Setup']
+    dependencies: ['Prepare cache']
     task:
       prologue:
         commands:
@@ -44,21 +45,26 @@ blocks:
       jobs:
         - name: ShellCheck
           commands:
-            - scripts/code/shellcheck.sh
+            - scripts/lint/lint.sh 'shellcheck'
         - name: phplint
           commands:
             - .semaphore/composer/cache-restore.sh
-            - scripts/code/phplint.sh
+            - scripts/lint/lint.sh 'phplint'
+        - name: phpcs
+          commands:
+            # TODO: phpcs
+            - .semaphore/composer/cache-restore.sh
+            - echo '...'
 
-  - name: PHP Tests
-    dependencies: ['Setup']
+  - name: PHP Tests (docker-compose.yml)
+    dependencies: ['Prepare cache']
     task:
       prologue:
         commands:
           - checkout
           - .semaphore/composer/cache-restore.sh
           - sudo chmod -R 777 .
-          - scripts/host/up.sh
+          - scripts/up.sh
       epilogue:
         on_fail:
           commands:
@@ -66,19 +72,25 @@ blocks:
       jobs:
         - name: acceptance
           commands:
-            - scripts/code/test.sh acceptance
+            - scripts/test.sh acceptance
         - name: functional
           commands:
-            - scripts/code/test.sh functional
+            - scripts/test.sh functional
         - name: wpunit
           commands:
-            - scripts/code/test.sh wpunit
+            - scripts/test.sh wpunit
         - name: unit
           commands:
-            - scripts/code/test.sh unit
+            - scripts/test.sh unit
+    task:
+      name: container + service
+      jobs:
+        - name: acceptance
+          commands:
+            - echo '...'
 
-  - name: Assets (Theme)
-    dependencies: ['Setup']
+  - name: Assets
+    dependencies: ['Prepare cache']
     task:
       prologue:
         commands:
@@ -94,7 +106,7 @@ blocks:
             - echo '...'
 
   - name: Deploy
-    dependencies: ['Linters', 'PHP Tests', 'Assets (Theme)']
+    dependencies: ['Linters', 'PHP Tests (docker-compose.yml)', 'Assets']
     # TODO: uncomment
     # skip:
     #   when: "branch != 'master'"

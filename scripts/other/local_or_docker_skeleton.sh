@@ -6,7 +6,7 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 
 # this is a scaffold/skeleton script to provide a template
 # where a command can be run either locally or via docker;
-# see composer.sh in folder 'scripts/code' for example
+# see composer.sh in folder 'scripts/php' for example
 
 # check if binary exists locally
 # for example, IS_BIN=$(command -v yarn || true)
@@ -32,13 +32,12 @@ if [[ -n "$IS_BIN" ]]; then
     echo 'Executing command locally...';
 
     (cd "$EXEC_PATH_LOCAL" && eval "$CMD_LOCAL")
-
 else
     echo ''
     echo 'Executing command via Docker container...';
 
     # allows to modify the command if Docker container
-    # requires it (see scripts/code/composer.sh for example)
+    # requires it (see scripts/php/composer.sh for example)
     CMD_DOCKER="$CMD_LOCAL"
 
     docker run --rm \

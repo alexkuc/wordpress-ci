@@ -5,14 +5,10 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
-# lint WP-Browser
-(
-    cd test
-    ./vendor/bin/phplint
-)
+./scripts/php/composer.sh 'test'
+./scripts/php/composer.sh 'src'
 
-# lint my-theme
-(
-    cd src
-    ./vendor/bin/phplint
-)
+# run scripts/commands here to build assets locally
+# use scripts/other/local_or_docker_skeleton.sh if you need
+# to invoke a binary which may not be present locally for
+# extra portability of this local setup

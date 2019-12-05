@@ -5,5 +5,12 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
-./scripts/code/shellcheck.sh
-./scripts/code/phplint.sh
+case "${1:-}" in
+    "shellcheck" | "phplint" )
+        "./scripts/lint/$1.sh"
+        ;;
+    *)
+        ./scripts/lint/shellcheck.sh
+        ./scripts/lint/phplint.sh
+        ;;
+esac
