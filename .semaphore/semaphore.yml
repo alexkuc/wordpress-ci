@@ -30,19 +30,6 @@ blocks:
           commands:
             - echo 'SemaphoreCI config is fine if this message is printed!'
         - name: Composer (--dev)
-          env_vars:
-            - name: CI_COMPOSER
-              value: '1'
-          commands:
-            - .semaphore/composer/cache-restore.sh
-            - scripts/code/setup.sh
-            - .semaphore/composer/cache-store.sh
-        - name: Composer (--no-dev)
-          env_vars:
-            - name: CI_COMPOSER
-              value: '1'
-            - name: CI_COMPOSER_NO_DEV
-              value: '1'
           commands:
             - .semaphore/composer/cache-restore.sh
             - scripts/code/setup.sh
