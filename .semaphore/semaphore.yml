@@ -52,9 +52,8 @@ blocks:
             - scripts/lint/lint.sh 'phplint'
         - name: phpcs
           commands:
-            # TODO: phpcs
             - .semaphore/composer/cache-restore.sh
-            - echo '...'
+            - scripts/lint/lint.sh 'phpcs'
 
   - name: PHP Tests (docker-compose.yml)
     dependencies: ['Prepare cache']
