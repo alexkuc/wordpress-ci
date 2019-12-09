@@ -56,7 +56,7 @@ blocks:
             - scripts/lint/lint.sh 'phpcs'
 
   - name: PHP Tests (docker-compose.yml)
-    dependencies: ['Prepare cache']
+    dependencies: ['Linters']
     task:
       prologue:
         commands:
@@ -81,15 +81,37 @@ blocks:
         - name: unit
           commands:
             - scripts/test.sh unit
+
+  - name: PHP Tests (container + service)
+    dependencies: ['Linters']
     task:
-      name: container + service
+      prologue:
+        commands:
+          - checkout
+          - .semaphore/composer/cache-restore.sh
+          - sudo chmod -R 777 .
+          - scripts/up.sh
+      epilogue:
+        on_fail:
+          commands:
+            - artifact push job test/tests/_output/
+      # TODO: complete container + service stage
       jobs:
         - name: acceptance
           commands:
             - echo '...'
+        - name: functional
+          commands:
+            - echo '...'
+        - name: wpunit
+          commands:
+            - echo '...'
+        - name: unit
+          commands:
+            - echo '...'
 
   - name: Assets
-    dependencies: ['Prepare cache']
+    dependencies: ['Linters']
     task:
       prologue:
         commands:
@@ -105,7 +127,7 @@ blocks:
             - echo '...'
 
   - name: Deploy
-    dependencies: ['Linters', 'PHP Tests (docker-compose.yml)', 'Assets']
+    dependencies: ['PHP Tests (docker-compose.yml)', 'PHP Tests (container + service)', 'Assets']
     # TODO: uncomment
     # skip:
     #   when: "branch != 'master'"
