@@ -10,11 +10,12 @@ CMD='cd /wp-browser'
 if [ -n "${1:-}" ] && [ -n "${2:-}" ]; then
     CMD="$CMD && vendor/bin/codecept run $1 $2 --debug"
 else
+    # 'shellcheck' and 'phplint' is executed
+    # locally while in CI, docker image used
+    # refer to specific CI config for details
     if [ -z "${CI:-}" ]; then
-        # ShellCheck.sh is executed locally
-        # in CI, docker image used, refer to
-        # specific CI config for details
         ./host-scripts/shellcheck.sh
+        ./host-scripts/phplint.sh
     fi
     # each suite has to be executed separate as per suggestions provided by WP-Browser:
     # https://wpbrowser.wptestkit.dev/summary/welcome/faq#can-i-run-all-my-tests-with-one-command

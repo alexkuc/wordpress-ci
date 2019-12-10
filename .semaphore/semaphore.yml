@@ -11,26 +11,45 @@ execution_time_limit:
 
 blocks:
 
-  - name: 'Linters'
+  - name: ShellCheck
+    dependencies: []
     task:
       agent:
         machine:
           type: e1-standard-2
           os_image: ubuntu1804
         containers:
-          - name: ShellCheck
+          - name: shellcheck
             image: alexkuc/shellcheck:semaphoreci
       jobs:
-        - name: 'ShellCheck'
+        - name: Lint
           commands:
             - checkout
             - find . -type f -name '*.sh' | wc -l
             - find . -type f -name '*.sh' | xargs shellcheck --external-sources
 
-  - name: 'Job #1'
+  - name: phplint
+    dependencies: []
+    task:
+      agent:
+        machine:
+          type: e1-standard-2
+          os_image: ubuntu1804
+        containers:
+          - name: composer
+            image: composer
+      jobs:
+        - name: Lint
+          commands:
+            - checkout
+            - scripts/code/setup.sh
+            - scripts/code/phplint.sh
+
+  - name: WP-Browser
+    dependencies: ['ShellCheck', 'phplint']
     task:
       jobs:
-        - name: 'Step #1'
+        - name: Tests
           commands:
             - checkout
             - export COMPOSER_JSON="$(checksum ./wp-browser/composer.lock)"
