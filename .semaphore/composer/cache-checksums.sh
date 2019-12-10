@@ -28,17 +28,13 @@ function calculate_checksum {
   exit 0
 }
 
-WP_BROWSER_COMPOSER="$(calculate_checksum 'wp-browser')"
+WP_BROWSER_COMPOSER="$(calculate_checksum 'test')"
 WP_BROWSER_COMPOSER="docker-wp-browser-$WP_BROWSER_COMPOSER"
 export WP_BROWSER_COMPOSER
 
-MY_THEME_COMPOSER="$(calculate_checksum 'my-theme')"
+MY_THEME_COMPOSER="$(calculate_checksum 'src')"
 MY_THEME_COMPOSER="docker-my-theme-$MY_THEME_COMPOSER"
 export MY_THEME_COMPOSER
-
-MY_PLUGIN_COMPOSER="$(calculate_checksum 'my-plugin')"
-MY_PLUGIN_COMPOSER="docker-my-plugin-$MY_PLUGIN_COMPOSER"
-export MY_PLUGIN_COMPOSER
 
 # not unsetting safe-guards will cause issues as you need to source this script
 set +Eeuo pipefail

@@ -31,7 +31,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: composer-{{ checksum "wp-browser/composer.json" }}-{{ checksum "wp-browser/composer.lock" }}
+          key: composer-{{ checksum "test/composer.json" }}-{{ checksum "test/composer.lock" }}
       - run:
           name: Run CI tests
           no_output_timeout: 5m
@@ -41,12 +41,12 @@ jobs:
             .circleci/fix-permissions.sh
             scripts/code/test.sh
       - save_cache:
-          key: composer-{{ checksum "wp-browser/composer.json" }}-{{ checksum "wp-browser/composer.lock" }}
+          key: composer-{{ checksum "test/composer.json" }}-{{ checksum "test/composer.lock" }}
           paths:
-              - "wp-browser/vendor/"
+              - "test/vendor/"
           when: on_success
       - store_artifacts:
-          path: "wp-browser/tests/_output/"
+          path: "test/tests/_output/"
 
   deploy:
     docker:

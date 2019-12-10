@@ -8,8 +8,8 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 # install Composer depedencies if $CI is not defined or
 # $CI and $COMPOSER is defined (to any value)
 if [[ -z "${CI:-}" ]] || [[ -n "${CI:-}" && -n "${CI_COMPOSER:-}" ]]; then
-    ./scripts/code/composer.sh "wp-browser"
-    ./scripts/code/composer.sh "my-theme"
+    ./scripts/code/composer.sh 'test'
+    ./scripts/code/composer.sh 'src'
 fi
 
 # run scripts/commands here to build assets locally
