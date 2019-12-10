@@ -9,17 +9,18 @@ CODECEPT='vendor/bin/codecept'
 
 CMD="cd /wp-browser && $CODECEPT build"
 
-if [[ -n "${1:-}" ]]; then
-    CMD="$CMD && $CODECEPT run $1 --debug"
-elif [[ -n "${1:-}" && -n "${2:-}" ]]; then
+# 'shellcheck' and 'phplint' is executed
+# locally while in CI, docker image used
+# refer to specific CI config for details
+if [[ -z "${CI:-}" ]]; then
+    ./scripts/code/lint.sh
+fi
+
+if [[ -n "${1:-}" && -n "${2:-}" ]]; then
     CMD="$CMD && $CODECEPT run $1 $2 --debug"
+elif [[ -n "${1:-}" ]]; then
+    CMD="$CMD && $CODECEPT run $1 --debug"
 else
-    # 'shellcheck' and 'phplint' is executed
-    # locally while in CI, docker image used
-    # refer to specific CI config for details
-    if [[ -z "${CI:-}" ]]; then
-        ./scripts/code/lint.sh
-    fi
     # each suite has to be executed separate as per suggestions provided by WP-Browser:
     # https://wpbrowser.wptestkit.dev/summary/welcome/faq#can-i-run-all-my-tests-with-one-command
     CMD="$CMD && \
@@ -30,3 +31,9 @@ else
 fi
 
 docker exec wordpress bash -c "$CMD"
+
+if [[ -z "${CI:-}" ]]; then
+    # When running tests locally, restore original value of the options siteurl and home
+    docker exec wordpress bash -c "wp option update siteurl 'http://localhost:8080' --autoload=yes"
+    docker exec wordpress bash -c "wp option update home 'http://localhost:8080' --autoload=yes"
+fi
