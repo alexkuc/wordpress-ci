@@ -7,16 +7,16 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 
 CODECEPT='vendor/bin/codecept'
 
-CMD="cd /wp-browser && $CODECEPT build"
+CMD="cd /test && $CODECEPT build"
 
-if [[ -e "wp-browser/tests/_output/failed" ]]; then
+if [[ -e "test/tests/_output/failed" ]]; then
     echo ''
     echo "Detected 'failed' file..."
     echo 'Overriding user parameters...'
     echo 'Re-running failed tests...'
     echo ''
     echo "Hint: delete 'failed' file to stop this!"
-    echo 'Path: wp-browser/tests/_output/failed'
+    echo 'Path: test/tests/_output/failed'
     echo ''
 
     # override positional (user) parameters to run

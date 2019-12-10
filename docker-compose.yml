@@ -24,10 +24,9 @@ services:
     # see https://github.com/visiblevc/wordpress-starter/blob/0b45d216f8e3fd503c24c48ac476b7ee023aba74/run.sh#L120
       - ./scripts/containers:/docker-entrypoint-initwp.d
     # CI tests
-      - ./wp-browser:/wp-browser
+      - ./test:/test
     # wordpress
-      - ./my-theme/:/my-theme
-      - ./my-plugin:/my-plugin
+      - ./src/:/src
     # apache
       - ./configs/php.ini-development:/usr/local/etc/php/php.ini
 

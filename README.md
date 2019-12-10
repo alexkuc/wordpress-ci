@@ -23,7 +23,7 @@ For each supported CI provider (a list of supported providers is available below
 
 - execution of CI tests
 - caching of Composer (`vendor` folder)
-- save/export of artifacts if CI tests fail (`wp-browser/tests/_output` folder)
+- save/export of artifacts if CI tests fail (`test/tests/_output` folder)
 
 The Docker image is based off [visiblevc/wordpress-starter](https://github.com/visiblevc/wordpress-starter). The only difference between this image and the one this repository uses is the installation of [PDO driver](https://www.php.net/manual/en/ref.pdo-mysql.php) for MySQL which is necessary in order to configure [CodeCeption](https://github.com/visiblevc/wordpress-starter). Source code of the Docker images are available in the folder `docker-image-src`. This is provided in case you have security concerns in using my own image, so you can compile yours (don't forget to modify `docker-compose.yml` to use your own image).
 
@@ -85,10 +85,9 @@ This section provides a quick glimpse of the folders/files and their purpose:
 | .semaphore | SemaphoreCI config |
 | configs | folder with various config files |
 | docker-image-src | source code of Docker image |
-| my-plugin | WordPress plugin* |
-| my-theme | WordPress theme* |
 | scripts | collection of Bash scripts |
-| wp-browser | WP-Browser and CI tests |
+| src | WordPress theme* |
+| test | WP-Browser and CI tests |
 | .gitignore | Git ignore file |
 | docker-compose.yml | Docker container definitions |
 | README.md | this file |

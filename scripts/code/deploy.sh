@@ -9,7 +9,7 @@ IS_WP=$(command -v wp || true)
 if [[ -z "${1:-}" ]]; then
     echo ''
     echo 'You need to specify path where your WordPress code exists'
-    echo 'For example: ./scripts/code/deploy.sh "my-theme"'
+    echo "For example: ./scripts/code/deploy.sh 'src'"
     echo ''
 
     exit 1

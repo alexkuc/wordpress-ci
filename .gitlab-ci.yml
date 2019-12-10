@@ -8,10 +8,10 @@ stages:
 cache:
   key:
     files:
-      - wp-browser/composer.lock
-      - wp-browser/composer.json
+      - test/composer.lock
+      - test/composer.json
   paths:
-    - wp-browser/vendor/
+    - test/vendor/
 
 tests:
   stage: test
@@ -29,6 +29,6 @@ tests:
 
   artifacts:
     paths:
-      - wp-browser/tests/_output/
+      - test/tests/_output/
     when: on_failure
     expire_in: 1 week

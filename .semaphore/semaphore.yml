@@ -75,7 +75,7 @@ blocks:
       epilogue:
         on_fail:
           commands:
-            - artifact push job wp-browser/tests/_output/
+            - artifact push job test/tests/_output/
       jobs:
         - name: acceptance
           commands:
@@ -99,10 +99,12 @@ blocks:
       jobs:
         - name: Minifier (JS)
           commands:
-            - (cd my-theme/ && artifact push workflow js/ --destination my-theme-js --force)
+            # TODO: complete JS minifier
+            - echo '...'
         - name: Minifier (CSS)
           commands:
-            - (cd my-theme/ && artifact push workflow layouts/ --destination my-theme-css --force)
+            # TODO: complete CSS minifier
+            - echo '...'
 
   - name: Deploy
     dependencies: ['Linters', 'PHP Tests', 'Assets (Theme)']
@@ -119,18 +121,5 @@ blocks:
       jobs:
         - name: Theme
           commands:
-            - artifact pull workflow my-theme-js --destination my-theme/js/ --force
-            - artifact pull workflow my-theme-css --destination my-theme/layouts/ --force
-            - scripts/code/deploy.sh my-theme
-            - artifact push project my-theme/my-theme.zip --force
-            - cp my-theme/my-theme.zip my-theme/my-theme-inc-vendor.zip
-            - zip -ur my-theme/my-theme-inc-vendor.zip my-theme/vendor/
-            - artifact push project my-theme/my-theme-inc-vendor.zip --force
-        - name: Plugin
-          commands:
-            - scripts/code/deploy.sh my-plugin
-            - artifact push project my-plugin/my-plugin.zip --force
-            - cp my-plugin/my-plugin.zip my-plugin/my-plugin-inc-vendor.zip
-            - zip -ur my-plugin/my-plugin-inc-vendor.zip my-plugin/vendor/
-            - artifact push project my-plugin/my-plugin-inc-vendor.zip --force
-
+            # TODO: complete deploy stage
+            - echo '...'

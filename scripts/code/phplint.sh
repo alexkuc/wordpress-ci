@@ -7,12 +7,12 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 
 # lint WP-Browser
 (
-    cd wp-browser
+    cd test
     ./vendor/bin/phplint
 )
 
 # lint my-theme
 (
-    cd my-theme
+    cd src
     ./vendor/bin/phplint
 )
