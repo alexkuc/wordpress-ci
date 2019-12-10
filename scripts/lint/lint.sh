@@ -10,8 +10,8 @@ case "${1:-}" in
         ./scripts/lint/"$1".sh
         ;;
     *)
-        ./scripts/lint/shellcheck.sh
-        ./scripts/lint/phplint.sh
-        ./scripts/lint/phpcs.sh
+        for i in scripts/lint/[^lint]*.sh; do
+            bash "$i"
+        done
         ;;
 esac
