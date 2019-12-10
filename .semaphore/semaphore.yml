@@ -117,15 +117,18 @@ blocks:
       prologue:
         commands:
           - checkout
+          - .semaphore/yarn/cache-restore.sh
+
       jobs:
         - name: Minifier (JS)
           commands:
-            # TODO: complete JS minifier
-            - echo '...'
+            - (cd src/ && yarn grunt minify:js -vvv)
+            - artifact push workflow src/js/ --destination src/js/
+
         - name: Minifier (CSS)
           commands:
-            # TODO: complete CSS minifier
-            - echo '...'
+            - (cd src/ && yarn grunt minify:css -vvv)
+            - artifact push workflow src/css/ --destination src/css/
 
   - name: Deploy
     dependencies: ['PHP Tests (docker-compose.yml)', 'PHP Tests (container + service)', 'Assets']
@@ -143,4 +146,11 @@ blocks:
         - name: Theme
           commands:
             # TODO: complete deploy stage
+            # TODO: don't forget to save cache (NO_DEV)
+            # TODO: - artifact pull workflow src/js/ --destination src/js/
+            # TODO: - artifact pull workflow src/css/ --destination src/css/
             - echo '...'
+            - artifact pull workflow src/js/ --destination src/js/ --force
+            - artifact pull workflow src/css/ --destination src/css/ --force
+            - ls -l src/js/
+            - ls -l src/css/

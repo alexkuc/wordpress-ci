@@ -1,4 +1,5 @@
 /*global module:false*/
+
 module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -19,10 +20,8 @@ module.exports = function(grunt) {
         expand: true,
         cwd: 'js',
         src: ['*.js'],
-        dest: 'dist',
-        rename: function(dest, src){
-          return dest + '/app.min.js';
-        }
+        dest: 'js',
+        ext: '.min.js',
       },
       css: {
         options: {
@@ -33,11 +32,10 @@ module.exports = function(grunt) {
           },
         },
         expand: true,
-        cwd: 'layouts',
-        dest: 'dist',
-        src: ['../style.css', '../rtl.css', '*.css'],
+        cwd: 'css',
+        src: ['*.css'],
         rename: function(dest, src){
-          return dest + '/style.min.css';
+          return 'style.min.css';
         }
       }
     },
@@ -49,16 +47,20 @@ module.exports = function(grunt) {
           },
         },
         files: [{
-          'dist/app.min.js': ['dist/app.min.js'],
-        }]
+          expand: true,
+          cwd: 'js',
+          src: ['*.js'],
+          dest: 'js',
+          ext: '.min.js',
+        }],
       }
     },
     cssmin: {
       dist: {
         files: [{
-          'dist/style.min.css': ['dist/style.min.css'],
-        }]
-      }
+          'style.min.css': ['style.min.css'],
+        }],
+      },
     },
     minify: {
       js: {
@@ -70,7 +72,6 @@ module.exports = function(grunt) {
     },
   });
 
-  // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
@@ -78,7 +79,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  // Default task.
   grunt.registerTask('default', function(){
     grunt.log.writeln('default');
   });
