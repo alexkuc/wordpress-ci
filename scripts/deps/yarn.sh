@@ -5,13 +5,7 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
-case "${1:-}" in
-    composer | yarn )
-        ./scripts/deps/"$1".sh
-        ;;
-    *)
-        for i in scripts/deps/*.sh; do
-            bash "$i"
-        done
-        ;;
-esac
+(
+    cd src
+    yarn install
+)
