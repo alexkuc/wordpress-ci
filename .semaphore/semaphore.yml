@@ -90,30 +90,47 @@ blocks:
           commands:
             - scripts/code/test.sh unit
 
-  - name: Assets
+  - name: Assets (Theme)
     dependencies: ['Setup']
     task:
       prologue:
         commands:
           - checkout
       jobs:
-        - name: Minifier
+        - name: Minifier (JS)
           commands:
-            - echo 'minifier placeholder'
-        - name: '???'
+            - (cd my-theme/ && artifact push workflow js/ --destination my-theme-js --force)
+        - name: Minifier (CSS)
           commands:
-            - echo '??? placeholder'
+            - (cd my-theme/ && artifact push workflow layouts/ --destination my-theme-css --force)
 
   - name: Deploy
-    dependencies: ['Linters', 'PHP Tests', 'Assets']
+    dependencies: ['Linters', 'PHP Tests', 'Assets (Theme)']
+    # TODO: uncomment
+    # skip:
+    #   when: "branch != 'master'"
     task:
       prologue:
         commands:
           - checkout
+          - export CI_COMPOSER_NO_DEV='1'
+          - .semaphore/composer/cache-restore.sh
+          - sudo chmod -R 777 .
       jobs:
         - name: Theme
           commands:
-            - echo '...'
+            - artifact pull workflow my-theme-js --destination my-theme/js/ --force
+            - artifact pull workflow my-theme-css --destination my-theme/layouts/ --force
+            - scripts/code/deploy.sh my-theme
+            - artifact push project my-theme/my-theme.zip --force
+            - cp my-theme/my-theme.zip my-theme/my-theme-inc-vendor.zip
+            - zip -ur my-theme/my-theme-inc-vendor.zip my-theme/vendor/
+            - artifact push project my-theme/my-theme-inc-vendor.zip --force
         - name: Plugin
           commands:
-            - echo '...'
+            - scripts/code/deploy.sh my-plugin
+            - artifact push project my-plugin/my-plugin.zip --force
+            - cp my-plugin/my-plugin.zip my-plugin/my-plugin-inc-vendor.zip
+            - zip -ur my-plugin/my-plugin-inc-vendor.zip my-plugin/vendor/
+            - artifact push project my-plugin/my-plugin-inc-vendor.zip --force
+
