@@ -10,7 +10,7 @@ IS_SHELLCHECK=$(command -v shellcheck || true)
 # reason for using sed in $CMD_COUNT
 # https://stackoverflow.com/questions/30927590/wc-on-osx-return-includes-spaces/30927885#30927885
 
-CMD_LS="find . -type f -name '*.sh' -not -path \"*/vendor/*\""
+CMD_LS="find . -type f -name '*.sh' -not -path \"*/vendor/*\" -not -path \"*/node_modules/*\""
 CMD_COUNT=$(eval "$CMD_LS" | wc -l | sed 's/^ *//')
 CMD_SHELLCHECK="$CMD_LS | xargs shellcheck"
 
