@@ -30,3 +30,5 @@ yarn-error.log
 
 # Assets
 dist/
+*.min.css
+*.min.js
