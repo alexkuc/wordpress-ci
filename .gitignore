@@ -20,3 +20,9 @@ wp-content/*
 
 # Composer
 vendor
+
+# Node
+node_modules
+
+# Linters
+.phplint-cache
