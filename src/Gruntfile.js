@@ -32,11 +32,10 @@ module.exports = function(grunt) {
           },
         },
         expand: true,
-        cwd: '.',
-        src: ['*.css', 'css/*.css', '!*.min.css'],
-        rename: function(dest, src){
-          return 'style.concat.css';
-        }
+        cwd: 'css',
+        src: ['*.css', '!*.min.css'],
+        dest: 'css',
+        ext: '.min.css'
       }
     },
     uglify: {
@@ -58,8 +57,12 @@ module.exports = function(grunt) {
     cssmin: {
       dist: {
         files: [{
-          'style.min.css': ['style.concat.css'],
-        }],
+          expand: true,
+          cwd: 'css',
+          src: ['*.css', '!*.min.css'],
+          dest: 'css',
+          ext: '.min.css'
+            }]
       },
     },
     minify: {
@@ -71,11 +74,10 @@ module.exports = function(grunt) {
       },
     },
     jshint: {
-      prod: ['js/**/*.js', '!**/*.min.js']
+      dev: ['js/**/*.js', '!**/*.min.js']
     },
     clean: {
-      min: ['*.min.*', 'css/**/*.min.*', 'js/**/*.min.*'],
-      'css-concat': ['style.concat.css']
+      dist: ['*.min.*', 'css/**/*.min.*', 'js/**/*.min.*']
     },
   });
 
@@ -99,7 +101,6 @@ module.exports = function(grunt) {
       case 'css':
         grunt.task.run('concat:css');
         grunt.task.run('cssmin:dist');
-        grunt.task.run('clean:css-concat');
         break;
     }
   });

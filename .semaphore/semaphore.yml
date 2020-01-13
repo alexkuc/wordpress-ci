@@ -136,7 +136,6 @@ blocks:
             - scripts/assets/minified/create-min-css.sh
             - .semaphore/artifact-bug.sh 'src/css' 'create'
             - artifact push workflow src/css/ --destination src/css/
-            - artifact push workflow src/style.min.css --destination src/style.min.css
 
   - name: Deploy
     dependencies: ['PHP Tests (docker-compose.yml)', 'PHP Tests (container + service)', 'Assets']
@@ -154,7 +153,6 @@ blocks:
           commands:
             - artifact pull workflow src/js/ --destination src/js/ --force
             - artifact pull workflow src/css/ --destination src/css/ --force
-            - artifact pull workflow src/style.min.css --destination src/style.min.css
             - scripts/setup.sh
             - scripts/up.sh
             - .semaphore/artifact-bug.sh 'src/css' 'delete'

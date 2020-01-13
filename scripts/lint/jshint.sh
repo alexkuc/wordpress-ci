@@ -7,5 +7,5 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 
 (
     cd src/
-    yarn grunt jshint:prod -vvv
+    yarn grunt jshint:dev -vvv
 )
