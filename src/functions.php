@@ -136,7 +136,7 @@ add_action( 'widgets_init', 'my_theme_widgets_init' );
  * Enqueue scripts and styles.
  */
 function my_theme_scripts() {
-	wp_enqueue_style( 'my-theme-style', get_min_file( 'style.css' ), array(), '1' );
+	wp_enqueue_style( 'my-theme-style', get_min_file( 'css/main.css' ), array(), '1' );
 
 	wp_enqueue_script( 'my-theme-navigation', get_min_file( 'js/navigation.js' ), array(), '20151215', true );
 
