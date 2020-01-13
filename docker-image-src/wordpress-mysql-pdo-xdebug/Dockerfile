@@ -1,3 +1,7 @@
+# custom Docker image taken from visiblevc/wordpress-starter and includes mysql-pdo and xdebug
+# direct vanilla link:
+# https://github.com/visiblevc/wordpress-starter/blob/6126590779171194c72fec8d07bb9064963e1b19/images/7.3/Dockerfile
+
 ARG PHP_VERSION=7.3
 FROM php:${PHP_VERSION}-apache
 ARG VERSION=latest

@@ -9,5 +9,6 @@ echo ''
 echo 'Creating minified assets!'
 echo ''
 
+# run custom grunt task to create minified css and js files
 ./scripts/assets/minified/create-min-js.sh
 ./scripts/assets/minified/create-min-css.sh

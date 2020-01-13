@@ -5,7 +5,7 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
-(
-    cd src/
-    ./vendor/bin/phpcs --colors
-)
+cd src/
+
+# execute phpcs linter and include colors in output
+./vendor/bin/phpcs --colors

@@ -1,3 +1,5 @@
+# custom Docker image taken from wordpress:cli and includes zip to allow wp dist-archive
+
 FROM php:7.3-alpine
 
 # install the PHP extensions we need (https://make.wordpress.org/hosting/handbook/handbook/server-environment/#php-extensions)

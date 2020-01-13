@@ -27,6 +27,7 @@ for i in "${folders[@]}"; do
     # Bash installed (see below for details)
     DOCKER_IMAGE='composer'
 
+    # execute either locally installed phpcs or fallback to Docker image option
     if [[ -n "$IS_BIN" ]]; then
         echo ''
         echo "Executing phplint locally for the folder '$i'...";
@@ -36,6 +37,7 @@ for i in "${folders[@]}"; do
         set +Eeuo pipefail
         trap - ERR
 
+        # cd into locally installed phpcs path and execute it
         (cd "$EXEC_PATH_LOCAL" && eval "$CMD_LOCAL")
     else
         echo ''
@@ -50,6 +52,7 @@ for i in "${folders[@]}"; do
         set +Eeuo pipefail
         trap - ERR
 
+        # use Docker image option to run phpcs
         docker run --rm \
                     -v "$EXEC_PATH_LOCAL:$EXEC_PATH_DOCKER" \
                     "$DOCKER_IMAGE" bash -c "$CMD_DOCKER"

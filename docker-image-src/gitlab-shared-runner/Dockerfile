@@ -1,3 +1,5 @@
+# used by GitLab in shared runner configuration
+
 FROM docker
 
 RUN apk add --no-cache bash py-pip python-dev libffi-dev openssl-dev gcc libc-dev make

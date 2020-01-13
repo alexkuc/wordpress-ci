@@ -7,21 +7,26 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 
 # this script provides a workaround for SemaphoreCI bug where
 # if artifact directory has only 1 file, there are issues
-# with restoring/pull such artifact into workflow
+# with restoring/pulling such artifact into workflow/folder
 
-# sanity check
+# sanity check:
+# make sure path is specified (1st parameter)
 if [[ -z "${1:-}" ]]; then
     echo 'You forgot to specify path!'
     exit 1
 fi
 
-# sanity check
+# sanity check:
+# path should not start with a trailing slash
+# see below (switch case) for explanations
 if [[ "${1:0:1}" = '/'  ]]; then
     echo 'Path should not start with slash!'
     exit 1
 fi
 
-# sanity check
+# sanity check:
+# path should not end with a trailing slash
+# see below (switch case) for explanations
 if [[ "${1: -1}" = '/' ]] ; then
     echo 'Path should not contain trailing slash!'
     exit 1
@@ -38,10 +43,17 @@ case "${2:-}" in
         find . -type f -path "*/$1/*" -name 'dummy*' -delete -exec echo "Removing... {}!" \;
         ;;
     *)
+        # count files and save as integer
         I="$(find . -type f -path "*/$1/*" | wc -l)"
+
+        # if count is less than 2, create dummy files
         if [[ "$I" -lt 2 ]]; then
             echo "Less than 2 files detected in the path $PWD!"
+
+            # calculate how many dummy files are required
             N="$((2 - I))"
+
+            # loop to create dummy files so that count > 2
             for (( i = 0; i < N; i++ )); do
                 echo "Adding a dummy file 'dummy$i'!"
                 touch "$PWD/$1/dummy$i"

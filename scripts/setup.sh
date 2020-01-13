@@ -5,13 +5,21 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
+# install Composer and Yarn dependencies
 case "${1:-}" in
+
+    # allow selective installation of either Composer
+    # or Yarn dependencies
     composer | yarn )
         ./scripts/deps/"$1".sh
         ;;
+
+    # default state to install both Composer and
+    # Yarn dependecies
     *)
         for i in scripts/deps/*.sh; do
             bash "$i"
         done
         ;;
+
 esac

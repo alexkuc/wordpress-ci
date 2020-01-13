@@ -4,9 +4,12 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
-COUNT=0
-LOGS=''
+# internal variables
+COUNT=0 # counter
+LOGS='' # logs string
 
+# sanity check:
+# make sure docker-machine is running (local environment)
 if [[ -z "${CI:-}" && -z "${DOCKER_HOST:-}" ]]; then
     echo ''
     # shellcheck disable=SC2016
@@ -17,18 +20,24 @@ if [[ -z "${CI:-}" && -z "${DOCKER_HOST:-}" ]]; then
     echo 'Example: . scripts/docker-machine-start.sh'
     echo 'Example: source scripts/docker-machine-start.sh'
     echo ''
-
     exit 1
 fi
 
 echo 'Pulling latest docker images...'
+# pull the latest images for Docker
 docker-compose pull
 
 echo 'Starting docker-compose in detached state...'
+# start docker-compose in detached state
 docker-compose up -d
 
 echo 'Waiting for wordpress container to be ready...'
 
+# wait until wordpress environment is ready
+# check is done by scrubbing docker-compose logs every second
+# for a string 'WordPress Configuration Complete!'
+# loop includes counter to provide a user feedback
+# time varies depedending on your specific implementation
 until [[ -n "$LOGS" ]]
 do
     sleep 1

@@ -27,10 +27,13 @@ CMD_LOCAL="..."
 # Bash installed (see below for details)
 DOCKER_IMAGE=''
 
+# check if binary exists locally or fallback to Docker image option
 if [[ -n "$IS_BIN" ]]; then
     echo ''
     echo 'Executing command locally...';
 
+    # cd into path of the locally binary
+    # execute local binary
     (cd "$EXEC_PATH_LOCAL" && eval "$CMD_LOCAL")
 else
     echo ''
@@ -40,6 +43,7 @@ else
     # requires it (see scripts/php/composer.sh for example)
     CMD_DOCKER="$CMD_LOCAL"
 
+    # fallback to Docker image option
     docker run --rm \
                 -v "$EXEC_PATH_LOCAL:/$EXEC_PATH_DOCKER" \
                 -w "/$EXEC_PATH_DOCKER" \

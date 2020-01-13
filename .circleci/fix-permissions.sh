@@ -4,4 +4,7 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
+# "dirty" workaround around permissions
+# normally, you would fix this issue but
+# CI/CD is ephemeral
 sudo chmod -R 777 .

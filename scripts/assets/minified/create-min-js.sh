@@ -10,4 +10,6 @@ echo 'Creating minified js!'
 echo ''
 
 cd src/
+
+# call custom grunt task
 yarn grunt minify:js -vvv

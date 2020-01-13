@@ -4,6 +4,7 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
+# provide a rudimentary "manpage" for this script
 function help {
     echo ''
     echo 'Bash script cache.sh is not called properly!'
@@ -18,30 +19,45 @@ function help {
     echo ''
 }
 
+# sanity check:
+# missing 1st parameter
 if [[ -z "${1:-}" ]]; then
     help '<command>'
     exit 1
 fi
 
+# sanity check:
+# missing 3rd parameter
 if [[ -z "${3:-}" ]]; then
     help '<cache-key>'
     exit 1
 fi
 
 case "$1" in
+
+    # store cache
     store)
+
+        # sanity check:
+        # missing 2nd parameter
         if [[ -z "${2:-}" ]]; then
             help '<folder>'
             exit 1
         fi
 
+        # SemaphoreCI functions
+        # https://docs.semaphoreci.com/ci-cd-environment/toolbox-reference/#cache
         cache store "$2" "$3"
         ;;
 
+    # restore cache
     restore)
+        # SemaphoreCI functions
+        # https://docs.semaphoreci.com/ci-cd-environment/toolbox-reference/#cache
         cache restore "$2"
         ;;
 
+    # catch-all for non-existing switch case
     *)
         echo 'unknown switch used!'
         ;;
