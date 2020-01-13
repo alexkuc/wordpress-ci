@@ -1,3 +1,4 @@
+# TODO: https://trello.com/c/WTLmYXEb/3-create-wordpress-theme-ci-template-circleci
 version: 2.1
 jobs:
   linters:

@@ -10,4 +10,6 @@ echo 'Creating minified css!'
 echo ''
 
 cd src/
+
+# call custom grunt task
 yarn grunt minify:css -vvv

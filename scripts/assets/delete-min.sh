@@ -9,7 +9,7 @@ echo ''
 echo 'Deleting *minified* assets!'
 echo ''
 
-(
-    cd src/
-    yarn grunt clean:min -vvv
-)
+cd src/
+
+# run custom grunt task to delete minifed css and js files (excludes dependencies)
+yarn grunt clean:min -vvv

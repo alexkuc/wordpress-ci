@@ -5,13 +5,19 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
+# bash script to automate various linting tasks
 case "${1:-}" in
+
+    # allow calling specific linter to speed up local development
     shellcheck | phplint | phpcs | jshint )
         ./scripts/lint/"$1".sh
         ;;
+
+    # execute all linters by default
     *)
         for i in scripts/lint/[^lint]*.sh; do
             bash "$i"
         done
         ;;
+
 esac

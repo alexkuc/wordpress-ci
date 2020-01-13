@@ -1,6 +1,10 @@
 #!/bin/bash
 # shellcheck disable=SC1091
 
+# vanilla, taken from visiblevc/wordpress-starter
+# direct link:
+# https://github.com/visiblevc/wordpress-starter/blob/6126590779171194c72fec8d07bb9064963e1b19/run.sh
+
 if ! sudo mount -a 2> /dev/null; then
     printf '\e[1;31mERROR:\e[0m %s' \
         'Container running with improper privileges.

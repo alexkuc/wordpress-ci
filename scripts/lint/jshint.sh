@@ -5,7 +5,7 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
-(
-    cd src/
-    yarn grunt jshint:dev -vvv
-)
+cd src/
+
+# run custom grunt task to lint js files (jshint)
+yarn grunt jshint:dev -vvv

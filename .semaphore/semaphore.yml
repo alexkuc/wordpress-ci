@@ -1,3 +1,5 @@
+# TODO: "Explicitly describe all available bells and whistles of the repo"
+# TODO: https://trello.com/c/w8bWYC1R/1-create-wordpress-theme-ci-template-semaphoreci
 version: v1.0
 name: WordPress CI Pipeline
 
@@ -149,7 +151,7 @@ blocks:
           - .semaphore/composer/cache-restore.sh
           - sudo chmod -R 777 .
       jobs:
-        - name: Production
+        - name: Theme
           commands:
             - artifact pull workflow src/js/ --destination src/js/ --force
             - artifact pull workflow src/css/ --destination src/css/ --force
