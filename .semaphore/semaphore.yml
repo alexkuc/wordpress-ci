@@ -55,6 +55,10 @@ blocks:
           commands:
             - .semaphore/composer/cache-restore.sh
             - scripts/lint/lint.sh 'phpcs'
+        - name: jshint
+          commands:
+            - scripts/setup.sh 'yarn'
+            - scripts/lint/lint.sh 'jshint'
 
   - name: PHP Tests (docker-compose.yml)
     dependencies: ['Linters']
@@ -122,12 +126,14 @@ blocks:
       jobs:
         - name: Minifier (JS)
           commands:
-            - (cd src/ && yarn grunt minify:js -vvv)
+            - scripts/assets/minified/create-min-js.sh
+            - .semaphore/artifact-bug.sh 'src/js/'
             - artifact push workflow src/js/ --destination src/js/
 
         - name: Minifier (CSS)
           commands:
-            - (cd src/ && yarn grunt minify:css -vvv)
+            - scripts/assets/minified/create-min-css.sh
+            - .semaphore/artifact-bug.sh 'src/css/'
             - artifact push workflow src/css/ --destination src/css/
 
   - name: Deploy
@@ -146,11 +152,14 @@ blocks:
         - name: Theme
           commands:
             # TODO: complete deploy stage
-            # TODO: don't forget to save cache (NO_DEV)
-            # TODO: - artifact pull workflow src/js/ --destination src/js/
-            # TODO: - artifact pull workflow src/css/ --destination src/css/
-            - echo '...'
+            # TODO: create bash scripts to remove non-minified css/js
+            # TODO: remove non-minified css/js
+            # TODO: exclude dummy files from assets
             - artifact pull workflow src/js/ --destination src/js/ --force
             - artifact pull workflow src/css/ --destination src/css/ --force
-            - ls -l src/js/
-            - ls -l src/css/
+            - scripts/setup.sh
+            - scripts/up.sh
+            - docker exec wordpress ./wp-content/themes/src/create-dist.sh
+            - artifact push project src/dist/src.tar.gz --force
+            - artifact push project src/dist/src.zip --force
+            - .semaphore/composer/cache-store.sh

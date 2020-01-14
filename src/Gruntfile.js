@@ -70,6 +70,12 @@ module.exports = function(grunt) {
 
       },
     },
+    jshint: {
+      prod: ['js/**/*.js', '!**/*.min.js']
+    },
+    clean: {
+      min: ['*.min.*', 'css/**/*.min.*', 'js/**/*.min.*'],
+    },
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -78,6 +84,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-clean');
 
   grunt.registerTask('default', function(){
     grunt.log.writeln('default');
