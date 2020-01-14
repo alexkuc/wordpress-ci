@@ -33,7 +33,7 @@ blocks:
             - .semaphore/composer/cache-restore.sh
             - scripts/setup.sh 'composer'
             - .semaphore/composer/cache-store.sh
-        - name: NodeJS cache
+        - name: NodeJS cache (--dev)
           commands:
             - .semaphore/yarn/cache-restore.sh
             - scripts/setup.sh 'yarn'
@@ -160,6 +160,6 @@ blocks:
             - scripts/up.sh
             - .semaphore/artifact-bug.sh 'src/css' 'delete'
             - .semaphore/artifact-bug.sh 'src/js' 'delete'
-            - scripts/deploy.sh
+            - scripts/deploy-dist.sh
             - artifact push project src/src.zip --force
             - .semaphore/composer/cache-store.sh
