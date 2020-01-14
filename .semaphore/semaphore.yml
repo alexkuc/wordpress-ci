@@ -89,35 +89,6 @@ blocks:
           commands:
             - scripts/test.sh unit
 
-  - name: PHP Tests (container + service)
-    dependencies: ['Linters']
-    task:
-      prologue:
-        commands:
-          # TODO: uncomment
-          - checkout
-          # - .semaphore/composer/cache-restore.sh
-          # - sudo chmod -R 777 .
-          # - scripts/up.sh
-      epilogue:
-        on_fail:
-          commands:
-            - artifact push job test/tests/_output/
-      # TODO: complete container + service stage
-      jobs:
-        - name: acceptance
-          commands:
-            - echo '...'
-        - name: functional
-          commands:
-            - echo '...'
-        - name: wpunit
-          commands:
-            - echo '...'
-        - name: unit
-          commands:
-            - echo '...'
-
   - name: Assets
     dependencies: ['Linters']
     task:
@@ -140,7 +111,7 @@ blocks:
             - artifact push workflow src/css/ --destination src/css/
 
   - name: Deploy
-    dependencies: ['PHP Tests (docker-compose.yml)', 'PHP Tests (container + service)', 'Assets']
+    dependencies: ['PHP Tests (docker-compose.yml)', 'Assets']
     skip:
       when: "branch != 'master'"
     task:
