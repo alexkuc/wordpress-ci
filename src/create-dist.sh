@@ -21,4 +21,5 @@ if [[ ! "$(wp dist-archive)" ]]; then
 fi
 
 cd wp-content/themes/src
+rm -f src.zip
 wp dist-archive . "$PWD/src.zip"
