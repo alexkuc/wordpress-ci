@@ -15,7 +15,7 @@ agent:
     os_image: ubuntu1804
 
 execution_time_limit:
-  minutes: 10
+  minutes: 15
 
 blocks:
 
@@ -92,10 +92,11 @@ blocks:
     task:
       prologue:
         commands:
+          # TODO: uncomment
           - checkout
-          - .semaphore/composer/cache-restore.sh
-          - sudo chmod -R 777 .
-          - scripts/up.sh
+          # - .semaphore/composer/cache-restore.sh
+          # - sudo chmod -R 777 .
+          # - scripts/up.sh
       epilogue:
         on_fail:
           commands:
@@ -127,20 +128,20 @@ blocks:
         - name: Minifier (JS)
           commands:
             - scripts/assets/minified/create-min-js.sh
-            - .semaphore/artifact-bug.sh 'src/js/'
+            - .semaphore/artifact-bug.sh 'src/js' 'create'
             - artifact push workflow src/js/ --destination src/js/
 
         - name: Minifier (CSS)
           commands:
             - scripts/assets/minified/create-min-css.sh
-            - .semaphore/artifact-bug.sh 'src/css/'
+            - .semaphore/artifact-bug.sh 'src/css' 'create'
             - artifact push workflow src/css/ --destination src/css/
+            - artifact push workflow src/style.min.css --destination src/style.min.css
 
   - name: Deploy
     dependencies: ['PHP Tests (docker-compose.yml)', 'PHP Tests (container + service)', 'Assets']
-    # TODO: uncomment
-    # skip:
-    #   when: "branch != 'master'"
+    skip:
+      when: "branch != 'master'"
     task:
       prologue:
         commands:
@@ -149,17 +150,15 @@ blocks:
           - .semaphore/composer/cache-restore.sh
           - sudo chmod -R 777 .
       jobs:
-        - name: Theme
+        - name: Production
           commands:
-            # TODO: complete deploy stage
-            # TODO: create bash scripts to remove non-minified css/js
-            # TODO: remove non-minified css/js
-            # TODO: exclude dummy files from assets
             - artifact pull workflow src/js/ --destination src/js/ --force
             - artifact pull workflow src/css/ --destination src/css/ --force
+            - artifact pull workflow src/style.min.css --destination src/style.min.css
             - scripts/setup.sh
             - scripts/up.sh
-            - docker exec wordpress ./wp-content/themes/src/create-dist.sh
-            - artifact push project src/dist/src.tar.gz --force
-            - artifact push project src/dist/src.zip --force
+            - .semaphore/artifact-bug.sh 'src/css' 'delete'
+            - .semaphore/artifact-bug.sh 'src/js' 'delete'
+            - docker exec wordpress ./create-dist.sh
+            - artifact push project src/src.zip --force
             - .semaphore/composer/cache-store.sh

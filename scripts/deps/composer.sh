@@ -5,5 +5,8 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
-./scripts/php/composer.sh 'test'
+if [[ -z "${CI_COMPOSER_NO_DEV:-}" ]]; then
+    ./scripts/php/composer.sh 'test'
+fi
+
 ./scripts/php/composer.sh 'src'

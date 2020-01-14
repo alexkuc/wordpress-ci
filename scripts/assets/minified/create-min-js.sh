@@ -9,7 +9,5 @@ echo ''
 echo 'Creating minified js!'
 echo ''
 
-(
-    cd src/
-    yarn grunt minify:js -vvv
-)
+cd src/
+yarn grunt minify:js -vvv
