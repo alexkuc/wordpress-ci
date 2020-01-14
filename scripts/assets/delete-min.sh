@@ -12,4 +12,4 @@ echo ''
 cd src/
 
 # run custom grunt task to delete minifed css and js files (excludes dependencies)
-yarn grunt clean:min -vvv
+yarn grunt clean:dist -vvv

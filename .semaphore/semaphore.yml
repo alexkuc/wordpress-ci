@@ -148,6 +148,7 @@ blocks:
         commands:
           - checkout
           - export CI_COMPOSER_NO_DEV='1'
+          - export CI_YARN_NO_DEV='1'
           - .semaphore/composer/cache-restore.sh
           - sudo chmod -R 777 .
       jobs:
@@ -159,6 +160,6 @@ blocks:
             - scripts/up.sh
             - .semaphore/artifact-bug.sh 'src/css' 'delete'
             - .semaphore/artifact-bug.sh 'src/js' 'delete'
-            - docker exec wordpress ./create-dist.sh
+            - scripts/deploy.sh
             - artifact push project src/src.zip --force
             - .semaphore/composer/cache-store.sh

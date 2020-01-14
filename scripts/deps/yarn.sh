@@ -5,7 +5,17 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
+# TODO: update using local_or_docker_skeleton.sh
+
+# change workdir to src (theme)
 cd src
 
-# install yarn dependencies
-yarn install
+# determine if running development or production mode
+if [[ -n "${CI_YARN_NO_DEV:-}" ]]; then
+    # production mode
+    yarn install --production=true
+else
+    # development mode
+    yarn install --production=false
+fi
+
