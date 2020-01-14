@@ -7,3 +7,5 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 # work around for Mac's issue with permisions on Docker's volumes
 # see: https://github.com/moby/moby/issues/2259#issuecomment-556134161
 ln -s /src /app/wp-content/themes/
+
+ln -s /app/wp-content/themes/src/create-dist.sh /app/create-dist.sh

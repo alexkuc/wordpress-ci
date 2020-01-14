@@ -6,5 +6,8 @@ trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BAS
 
 . .semaphore/composer/cache-checksums.sh
 
-./.semaphore/cache.sh restore "$WP_BROWSER_COMPOSER" 'test/vendor/'
+if [[ -z "${CI_COMPOSER_NO_DEV:-}" ]]; then
+    ./.semaphore/cache.sh restore "$WP_BROWSER_COMPOSER" 'test/vendor/'
+fi
+
 ./.semaphore/cache.sh restore "$MY_THEME_COMPOSER" 'src/vendor/'
