@@ -150,6 +150,7 @@ blocks:
           - export CI_COMPOSER_NO_DEV='1'
           - export CI_YARN_NO_DEV='1'
           - .semaphore/composer/cache-restore.sh
+          - .semaphore/yarn/cache-restore.sh
           - sudo chmod -R 777 .
       jobs:
         - name: Theme
@@ -163,3 +164,4 @@ blocks:
             - scripts/deploy-dist.sh
             - artifact push project src/src.zip --force
             - .semaphore/composer/cache-store.sh
+            - .semaphore/yarn/cache-store.sh
