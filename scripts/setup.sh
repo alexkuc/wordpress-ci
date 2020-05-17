@@ -5,6 +5,12 @@
 set -Eeuo pipefail
 trap 'printf "\n[ERROR]: Error occurred at $BASH_SOURCE:$LINENO\n[COMMAND]: $BASH_COMMAND\n"' ERR
 
+if [[ "$CI" == 'true' ]] && [[ "$SEMAPHORE" == 'true' ]]; then
+    # shellcheck disable=SC1091
+    source /home/semaphore/.nvm/nvm.sh
+    nvm use stable
+fi
+
 # install Composer and Yarn dependencies
 case "${1:-}" in
 
