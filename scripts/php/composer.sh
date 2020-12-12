@@ -50,27 +50,11 @@ fi
 # use locally installed Composer
 CMD_LOCAL="composer install $COMPOSER_OPTIONS"
 
-# Downloads packages in parallel to speed up the installation process
-# https://github.com/hirak/prestissimo
-PARALLEL_DL="composer global require hirak/prestissimo"
-
 # check if Composer deps are installed or not
 if [[ ! -d "$DEPS_LOCAL_PATH/vendor" ]]; then
 
     # either running local Composer or falling back to Docker image
     if [[ -n "$IS_COMPOSER" ]]; then
-
-        # enable parallel download for local Composer
-        if ! composer global show | grep -q 'hirak/prestissimo'; then
-            echo ''
-            echo 'Installing globally hirak/prestissimo via local Composer...'
-            echo ''
-            eval "$PARALLEL_DL"
-        else
-            echo ''
-            echo 'hirak/prestissimo is already installed, skipping installation...'
-            echo ''
-        fi
 
         # local Composer
         echo ''
@@ -80,6 +64,7 @@ if [[ ! -d "$DEPS_LOCAL_PATH/vendor" ]]; then
 
     else
 
+        # docker-based Composer
         echo ''
         echo 'Composer is not installed locally! Resorting to Docker...'
         echo 'Will (globally) install hirak/prestissimo inside Docker-based Composer container...'
