@@ -1,3 +1,7 @@
+# !!! Disclaimer !!!
+
+This is no longer maintained. It _used_ to work in the past but currently it requires upgrading of tooling to resolve `set-value` security warning not to mention missing [hautelook/phpass](https://github.com/hautelook/phpass) dependency. I do not use this and it does not appear anyone else is using this. If you want to become an active contributor/maintainer, you can contact me on [LinkedIn](http://www.linkedin.com/in/alexkuc/).
+
 ### Table Of Contents
 
 - [TL;DR](#tldr)
